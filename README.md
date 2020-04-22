@@ -3,7 +3,7 @@
 ![](https://img.shields.io/github/repo-size/LorenzoCorbella74/web-cli "Repository size")
 ![](https://img.shields.io/github/package-json/v/LorenzoCorbella74/web-cli)
 
-![IMG](Demo/web-cli.PNG)
+![IMG](demo/web-cli.PNG)
 
 My first attemp with Web Components for creating a a web development console like the console in FPS games (Quake, Unreal, etc....). Open the web development console with   `ctrl + \`.
 
