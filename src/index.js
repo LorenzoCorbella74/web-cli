@@ -21,11 +21,17 @@ class WebCLI extends HTMLElement {
     connectedCallback () {
         document.addEventListener('keydown', event => this.onKeyDown(event));
         this.ctrlEl.addEventListener('click', event => this.onClick(event));
+        this.inputEl.addEventListener('paste', event => this.onPaste(event));
     }
 
     disconnectedCallback () {
         document.removeEventListener('keydown', event => this.onKeyDown(event));
         this.ctrlEl.removeEventListener('click', event => this.onClick(event));
+        this.inputEl.removeEventListener('paste', event => this.onPaste(event));
+    }
+
+    onPaste(){
+        setTimeout(this.updateCursor.bind(this), 150);
     }
 
     onClick () {
@@ -103,18 +109,18 @@ class WebCLI extends HTMLElement {
                     }
                     break;
             }
-            setTimeout(this.updateCursor.bind(this), 150);
+            setTimeout(this.updateCursor.bind(this), 100);
         }
     }
 
     updateCursor () {
-        this.beforeCursor.innerHTML = this.inputEl.value;
+        this.hiddenInput.innerHTML = this.inputEl.value.replace(' ','x');   // hack per far avanzare il cursore anche con spazi
     }
 
     runCmd () {
         let txt = this.inputEl.value.trim();
         if (txt === "") { return; }  // If empty, stop processing
-        this.beforeCursor.innerHTML = '';
+        this.hiddenInput.innerHTML = '';
         this.inputEl.value = '';     // Clear input
         this.cmdOffset = 0;         // Reset history index
         let index = this.history.findIndex(e => e === txt);
@@ -131,12 +137,13 @@ class WebCLI extends HTMLElement {
 
         if (cmd === ':json') {
             tokens.shift();
-            jsonStr = tokens.join();
+            jsonStr = tokens.join('');
+            jsonStr = JSON.stringify(JSON.parse(jsonStr)) // si rimuove gli spazi
         }
 
         if (cmd === ":clear") { this.outputEl.innerHTML = ""; return; }
         if (cmd === ":about") {
-            this.writeHTML(`Version: ${this.version} - ${this.versionDate}`, "cmd"); return;
+            this.writeHTML(`Version: <strong>${this.version}</strong> - <strong>${this.versionDate}</strong>`, "cmd"); return;
         }
         if (cmd === ":help") {
             this.writeHTML(`${tableTemplate}`);
@@ -225,6 +232,7 @@ class WebCLI extends HTMLElement {
             this.scrollToBottom()
         } catch (error) {
             this.writeHTML(`Error parsing JSON data...`, "error");
+            this.newLine();
         }
     }
 
@@ -243,7 +251,7 @@ class WebCLI extends HTMLElement {
         this.outputEl = this._shadow.querySelector(".webcli-output");   // Div holding console output
         this.inputEl = this._shadow.querySelector(".webcli-input input"); // Input control
         this.loaderEl = this._shadow.querySelector(".webcli-loader");     // loader animation
-        this.beforeCursor = this._shadow.querySelector(".before-cursor"); // loader animation
+        this.hiddenInput = this._shadow.querySelector(".before-cursor"); // loader animation
 
         this.ctrlEl.style.display = "none"; // default is invisible!
     }
