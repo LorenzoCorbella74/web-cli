@@ -2,6 +2,20 @@ import { CLI_TEMPLATE, CLI_STYLE, tableTemplate, notRecognized, DELETABLE_DIV } 
 
 import DomJsonTree from "dom-json-tree";
 
+function formatDate (date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
 class WebCLI extends HTMLElement {
 
     constructor() {
@@ -30,7 +44,17 @@ class WebCLI extends HTMLElement {
         this.inputEl.removeEventListener('paste', event => this.onPaste(event));
     }
 
-    onPaste () {
+    onPaste (event) {
+
+        /* let paste = (event.clipboardData || window.clipboardData).getData('text');
+        paste = JSON.stringify(JSON.parse(paste)); // si rimuovono tutti gli spazi
+
+        const selection = this._shadow.querySelector('.webcli-input input').getSelection();
+        if (!selection.rangeCount) return false;
+        selection.deleteFromDocument();
+        selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+
+        event.preventDefault(); */
         setTimeout(this.updateCursor.bind(this), 150);
     }
 
@@ -143,7 +167,7 @@ class WebCLI extends HTMLElement {
                 this.writeJson(jsonStr);
             } catch (error) {
                 this.writeHTML(`Error parsing JSON data...`, "error");
-                this.newLine();
+                this.newBlankLine();
             }
             return;
         }
@@ -186,8 +210,13 @@ class WebCLI extends HTMLElement {
         this.outputEl.scrollTop = this.outputEl.scrollHeight;
     }
 
-    newLine () {
+    newBlankLine () {
         this.outputEl.appendChild(document.createElement("br"));
+        this.scrollToBottom();
+    }
+
+    newLine () {
+        this.outputEl.appendChild(document.createElement("hr"));
         this.scrollToBottom();
     }
 
@@ -211,28 +240,65 @@ class WebCLI extends HTMLElement {
 
     writeJson (jsonStr) {
         let template = document.createElement("template");
-        template.innerHTML = `${DELETABLE_DIV}`;
-        let div = template.content.cloneNode(true)
+        template.innerHTML = `${DELETABLE_DIV('Json formatter')}`;
+        let div = template.content.cloneNode(true);
+        let index = `JSON${Math.floor(Math.random() * 10000)}`;
+        let a = div.children[0];
+        a.classList.add(index);
         let jsonDiv = div.querySelector('.json-div');
         let data = JSON.parse(jsonStr);
         let djt = new DomJsonTree(data, jsonDiv, {
             colors: {
-                key: "#008080",
-                type: "#546778",
+                key: this.getCssVariable('--color'),    /* "#008080" */
+                type: this.getCssVariable('--color-cmd'), // "#546778",
                 typeNumber: "#000080",
-                typeString: "#dd1144",
+                typeString: this.getCssVariable('--color'),
                 typeBoolean: "#000080"
             }
         });
         djt.render();
-        this.outputEl.appendChild(div);
-        this.newLine();
+        this.outputEl.appendChild(a);
+        a.querySelector('.delete-btn').addEventListener('click', event => this.delete(event, index));
+        a.querySelector('.save-btn').addEventListener('click', event => this.save(event, jsonStr));
+        a.querySelector('.toggle-btn').addEventListener('click', event => this.toggle(event, index));
+        this.newBlankLine();
         this.scrollToBottom()
     }
 
+    delete (e, el) {
+        let element = this._shadow.querySelector(`.${el}`);
+        element.parentNode.removeChild(element);
+    }
+
+    save (e, jsonStr) {
+        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jsonStr));
+        let dlAnchorElem = this._shadow.querySelector('#downloadAnchorElem');
+        dlAnchorElem.setAttribute("href", dataStr);
+        dlAnchorElem.setAttribute("download", `sheet_${formatDate(new Date())}.json`); // ``
+        dlAnchorElem.click();
+    }
+
+    toggle (e, el) {
+        let element = this._shadow.querySelector(`.${el}`);
+        let jsonDiv = element.querySelector('.json-div');
+        if (jsonDiv.style.display === "none") {
+            jsonDiv.style.display = "block";
+        } else {
+            jsonDiv.style.display = "none";
+        }
+    }
+
+
+    // non funziona !!!
+    getCssVariable (variableName) {
+        let color = getComputedStyle(this._shadow.host).getPropertyValue(variableName);
+        return color;
+    }
+
+
     showWelcomeMsg () {
         this.writeHTML("Use <strong>:help</strong> to show <strong>WebCLI</strong> commands", "cmd");
-        this.newLine();
+        this.newBlankLine();
     }
 
     createTemplate () {
