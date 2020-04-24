@@ -166,6 +166,30 @@ export const CLI_STYLE = `
     animation: spin 0.6s linear infinite;
 }
 
+
+.deletable-div > .header {
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:1rem;
+}
+
+.delete-btn, .save-btn, .toggle-btn {
+    opacity:0;
+    font-size:1rem;
+    margin:0px 4px;
+    transition:opacity 250ms;
+}
+
+.header .title {
+    flex-grow:1;
+    text-align:left;
+}
+
+.header:hover > .delete-btn, .header:hover > .save-btn, .header:hover > .toggle-btn {
+    opacity:1;
+    cursor:pointer;
+}
+
 @keyframes blink {
     0% {
         background: var(--color);
@@ -199,3 +223,15 @@ export const tableTemplate = `
     ;
 
 export const notRecognized = 'is not recognized as command.';
+
+export const DELETABLE_DIV = `
+    <div class="deletable-div">
+        <div class="header">
+            <div class="title"><h4>Title</h4></div> 
+            <div class="save-btn">&#128190;</div>
+            <div class="toggle-btn">&#9660;</div>
+            <div class="delete-btn">&#10006;</div>
+        </div>
+        <div class="json-div"></div>
+    </div>
+`;

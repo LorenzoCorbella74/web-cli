@@ -1,4 +1,4 @@
-import { CLI_TEMPLATE, CLI_STYLE, tableTemplate, notRecognized } from './templates';
+import { CLI_TEMPLATE, CLI_STYLE, tableTemplate, notRecognized, DELETABLE_DIV } from './templates';
 
 import DomJsonTree from "dom-json-tree";
 
@@ -30,7 +30,7 @@ class WebCLI extends HTMLElement {
         this.inputEl.removeEventListener('paste', event => this.onPaste(event));
     }
 
-    onPaste(){
+    onPaste () {
         setTimeout(this.updateCursor.bind(this), 150);
     }
 
@@ -114,7 +114,7 @@ class WebCLI extends HTMLElement {
     }
 
     updateCursor () {
-        this.hiddenInput.innerHTML = this.inputEl.value.replace(' ','x');   // hack per far avanzare il cursore anche con spazi
+        this.hiddenInput.innerHTML = this.inputEl.value.replace(' ', 'x');   // hack per far avanzare il cursore anche con spazi
     }
 
     runCmd () {
@@ -138,7 +138,14 @@ class WebCLI extends HTMLElement {
         if (cmd === ':json') {
             tokens.shift();
             jsonStr = tokens.join('');
-            jsonStr = JSON.stringify(JSON.parse(jsonStr)) // si rimuove gli spazi
+            try {
+                jsonStr = JSON.stringify(JSON.parse(jsonStr)) // si rimuove gli spazi
+                this.writeJson(jsonStr);
+            } catch (error) {
+                this.writeHTML(`Error parsing JSON data...`, "error");
+                this.newLine();
+            }
+            return;
         }
 
         if (cmd === ":clear") { this.outputEl.innerHTML = ""; return; }
@@ -163,14 +170,6 @@ class WebCLI extends HTMLElement {
                 return;
             }
             this.writeHTML(`<strong>${param1}</strong> ${notRecognized}`, "error");
-            return;
-        }
-        if (cmd === ":json") {
-            if (jsonStr) {
-                this.writeJson(jsonStr);
-                return;
-            }
-            this.writeHTML(`Error parsing JSON data...`, "error");
             return;
         }
 
@@ -211,29 +210,24 @@ class WebCLI extends HTMLElement {
     }
 
     writeJson (jsonStr) {
-        let div = document.createElement("div");
-        let name = `Json${Math.floor(Math.random() * 1000)}`;
-        div.className = name;
-        // div.innerHTML = markup;
-        try {
-            let data = JSON.parse(jsonStr);
-            let djt = new DomJsonTree(data, div, {
-                colors: {
-                    key: "#008080",
-                    type: "#546778",
-                    typeNumber: "#000080",
-                    typeString: "#dd1144",
-                    typeBoolean: "#000080"
-                }
-            });
-            djt.render();
-            this.outputEl.appendChild(div);
-            this.newLine();
-            this.scrollToBottom()
-        } catch (error) {
-            this.writeHTML(`Error parsing JSON data...`, "error");
-            this.newLine();
-        }
+        let template = document.createElement("template");
+        template.innerHTML = `${DELETABLE_DIV}`;
+        let div = template.content.cloneNode(true)
+        let jsonDiv = div.querySelector('.json-div');
+        let data = JSON.parse(jsonStr);
+        let djt = new DomJsonTree(data, jsonDiv, {
+            colors: {
+                key: "#008080",
+                type: "#546778",
+                typeNumber: "#000080",
+                typeString: "#dd1144",
+                typeBoolean: "#000080"
+            }
+        });
+        djt.render();
+        this.outputEl.appendChild(div);
+        this.newLine();
+        this.scrollToBottom()
     }
 
     showWelcomeMsg () {
@@ -253,7 +247,7 @@ class WebCLI extends HTMLElement {
         this.loaderEl = this._shadow.querySelector(".webcli-loader");     // loader animation
         this.hiddenInput = this._shadow.querySelector(".before-cursor"); // loader animation
 
-        this.ctrlEl.style.display = "none"; // default is invisible!
+        this.ctrlEl.style.display = "none"; // the web-cli by default is invisible!
     }
 
     loader (b) {
