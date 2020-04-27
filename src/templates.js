@@ -242,23 +242,11 @@ hr{
     }
 }
 
-</style>`
-    ;
-
-export const tableTemplate = `
-    <table class="webcli-tbl">
-        <tr><td><strong>:help</strong></td><td>List of commands</td></tr>
-        <tr><td><strong>:theme (dark/default)</strong></td><td>change themes </td></tr>
-        <tr><td><strong>:size (big/default)</strong></td><td>change size </td></tr>
-        <tr><td><strong>:clean</strong></td><td>Clean the console</td></tr>
-        <tr><td><strong>:about</strong></td><td>Console info</td></tr>
-        <tr><td><strong>:json jsonStr</strong></td><td>Show a json tree</td></tr>
-    </table>`
-    ;
+</style>`;
 
 export const notRecognized = 'is not recognized as command.';
 
-export const DELETABLE_DIV = (title)=> `
+export const DELETABLE_DIV = (title) => `
     <div class="deletable-div">
         <div class="header">
             <div class="title"><h4>${title}</h4></div> 

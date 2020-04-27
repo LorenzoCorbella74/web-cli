@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
-  "keywords": ["web cli","web Components", "CLI"],
+  "keywords": [
+    "web cli",
+    "web Components",
+    "CLI"
+  ],
   "author": "Lorenzo Corbella",
   "license": "ISC",
   "scripts": {
