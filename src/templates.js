@@ -74,7 +74,7 @@ web-cli {
     --color-cmd: #a0aabf;
     --color-error: #FF4136;
     --color-warning: #FF851B;
-    --color-ok: #7FDBFF;
+    --color-ok: #01FF70;
     --color-border: #0074D9;
 }
 
