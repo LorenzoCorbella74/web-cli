@@ -1,9 +1,9 @@
 import { CLI_TEMPLATE, CLI_STYLE, notRecognized, DELETABLE_DIV } from './templates';
 import { commands } from './commands';
 
-import DomJsonTree from "dom-json-tree";
+import DomJsonTree from 'dom-json-tree';
 
-function formatDate(date) {
+function formatDate (date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
@@ -23,97 +23,115 @@ class WebCLI extends HTMLElement {
         super();
         this.history = [];      // Command history
         this.cmdOffset = 0;     // Reverse offset into history
-        this.isDark = false;
-        this.isBig = false;
-        this.version = '0.0.2';
+        this.version = '0.0.3';
         this.versionDate = '28/04/20'
 
         this.createTemplate();
-        this.showWelcomeMsg();
+
         this.loader(false);
     }
 
-    connectedCallback() {
+
+    set options (input) {
+        this._options = input;
+        if (input.theme) {
+            this.setTheme(input.theme);
+        }
+        if (input.size) {
+            this.setSize(input.size);
+        }
+        if (input.open) {
+            this.toggleCli();
+        }
+        this.showWelcomeMsg();
+    }
+
+    get options () {
+        return this._options;
+    }
+
+    connectedCallback () {
         document.addEventListener('keydown', event => this.onKeyDown(event));
         this.ctrlEl.addEventListener('click', event => this.onClick(event));
         this.inputEl.addEventListener('paste', event => this.onPaste(event));
     }
 
-    disconnectedCallback() {
+    disconnectedCallback () {
         document.removeEventListener('keydown', event => this.onKeyDown(event));
         this.ctrlEl.removeEventListener('click', event => this.onClick(event));
         this.inputEl.removeEventListener('paste', event => this.onPaste(event));
     }
 
-    onPaste(event) {
+    onPaste (event) {
 
-        /* let paste = (event.clipboardData || window.clipboardData).getData('text');
+        let paste = (event.clipboardData || window.clipboardData).getData('text');
         paste = JSON.stringify(JSON.parse(paste)); // si rimuovono tutti gli spazi
 
-        const selection = this._shadow.querySelector('.webcli-input input').getSelection();
+        /* this.inputEl.value = this.inputEl.value + paste; */
+
+        /* const selection = this._shadow.querySelector('.webcli-input input');
         if (!selection.rangeCount) return false;
         selection.deleteFromDocument();
-        selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+        selection.getRangeAt(0).insertNode(document.createTextNode(paste)); */
 
-        event.preventDefault(); */
-        setTimeout(this.updateCursor.bind(this), 150);
+        // event.preventDefault();
+        setTimeout(this.updateCursor.bind(this), 100);
     }
 
-    onClick() {
+    onClick () {
         this.focus();
     }
 
-    setTheme(theme) {
+    setTheme (theme) {
+        let classes = this.ctrlEl.classList.value;
+        let match = classes.match(/\w+-theme/g);
+        this.ctrlEl.classList.remove(match);
         if (theme === 'default') {
-            this.ctrlEl.classList.remove('dark-theme');
             this.ctrlEl.classList.add('default-theme');
-            this.isDark = false;
         } else {
-            this.ctrlEl.classList.remove('default-theme');
-            this.ctrlEl.classList.add('dark-theme');
-            this.isDark = true;
+            this.ctrlEl.classList.add(`${theme}-theme`);
         }
     }
 
-    setSize(size) {
+    setSize (size) {
+        let classes = this.ctrlEl.classList.value;
+        let match = classes.match(/\w+-size/g);
+        this.ctrlEl.classList.remove(match);
         if (size === 'default') {
-            this.ctrlEl.classList.remove('big-size');
             this.ctrlEl.classList.add('default-size');
-            this.isBig = false;
         } else {
-            this.ctrlEl.classList.remove('default-size');
-            this.ctrlEl.classList.add('big-size');
-            this.isBig = true;
+            this.ctrlEl.classList.add(`${size}-size`);
         }
     }
 
-    toggleTheme(e) {
+    toggleTheme (e) {
         e.preventDefault();
         if (this.ctrlEl.classList.contains('dark-theme')) {
             this.ctrlEl.classList.remove('dark-theme');
             localStorage.removeItem('dark-theme');
-            this.isDark = false;
         } else {
             this.ctrlEl.classList.add('dark-theme');
             localStorage.setItem('dark-theme', true);
-            this.isDark = true;
         }
     }
 
-    onKeyDown(e) {
+    toggleCli () {
         let ctrlStyle = this.ctrlEl.style;
+        if (ctrlStyle.display == "none") {
+            ctrlStyle.display = "";
+            this.focus();
+        } else {
+            ctrlStyle.display = "none";
+        }
+    }
 
+    onKeyDown (e) {
         if (e.ctrlKey && e.keyCode == 220) {    // Ctrl + Backquote
-            if (ctrlStyle.display == "none") {
-                ctrlStyle.display = "";
-                this.focus();
-            } else {
-                ctrlStyle.display = "none";
-            }
+            this.toggleCli();
             return;
         }
 
-        if (this.isloader) { return; }
+        // if (this.isloader) { return; }
 
         //Other keys (when input has focus)//http://keycode.info/
         if (this._shadow.host === document.activeElement) {
@@ -138,18 +156,18 @@ class WebCLI extends HTMLElement {
         }
     }
 
-    updateCursor() {
+    updateCursor () {
         this.hiddenInput.innerHTML = this.inputEl.value.replace(' ', 'x');   // hack per far avanzare il cursore anche con spazi
     }
 
-    runCmd() {
+    runCmd () {
         let txt = this.inputEl.value.trim();
         if (txt === "") { return; }  // If empty, stop processing
         this.hiddenInput.innerHTML = '';
         this.inputEl.value = '';     // Clear input
         this.cmdOffset = 0;         // Reset history index
         let index = this.history.findIndex(e => e === txt);
-        if (index === -1) {
+        if (index === -1 && this.history.length <= (this._options.max_num_commands || 50)) {
             this.history.push(txt);     // Add cmd to history
         }
 
@@ -157,34 +175,34 @@ class WebCLI extends HTMLElement {
         let tokens = /* txt.match(/\S+/g);  //  */txt.split(/\s+/);
         let cmd = tokens[0].toLowerCase().substring(1);
 
-
         if (cmd in commands) {
             commands[cmd].action(this, tokens);
         } else {
-            this.writeHTML(`<strong>${cmd}</strong> ${notRecognized}`, "error");
+            this.writeHTML(`> <strong>${tokens[0]}</strong> ${notRecognized}`, "error");
         }
+
         // Server commands TODO:
     }
 
-    focus() {
+    focus () {
         this.inputEl.focus();
     }
 
-    scrollToBottom() {
+    scrollToBottom () {
         this.outputEl.scrollTop = this.outputEl.scrollHeight;
     }
 
-    newBlankLine() {
+    newBlankLine () {
         this.outputEl.appendChild(document.createElement("br"));
         this.scrollToBottom();
     }
 
-    newLine() {
+    newLine () {
         this.outputEl.appendChild(document.createElement("hr"));
         this.scrollToBottom();
     }
 
-    writeText(txt, cmdClass) {
+    writeText (txt, cmdClass) {
         let div = document.createElement("div");
         cmdClass = cmdClass || "ok";
         div.className = "webcli-" + cmdClass;
@@ -193,7 +211,7 @@ class WebCLI extends HTMLElement {
         this.scrollToBottom()
     }
 
-    writeHTML(markup, cmdClass) {
+    writeHTML (markup, cmdClass) {
         let div = document.createElement("div");
         cmdClass = cmdClass || "cmd";
         div.className = "webcli-" + cmdClass;
@@ -202,50 +220,62 @@ class WebCLI extends HTMLElement {
         this.scrollToBottom()
     }
 
-    writeJson(jsonStr) {
+    writeBlock (title, type, data) {
         let template = document.createElement("template");
-        template.innerHTML = `${DELETABLE_DIV('Json formatter')}`;
+        template.innerHTML = `${DELETABLE_DIV(title, type)}`;
         let div = template.content.cloneNode(true);
-        let index = `JSON${Math.floor(Math.random() * 10000)}`;
+        let index = `Output${Math.floor(Math.random() * 10000)}`;
         let a = div.children[0];
         a.classList.add(index);
-        let jsonDiv = div.querySelector('.json-div');
+        let content = div.querySelector('.content');
+        if (type === 'json') {
+            this.createJsonTree(data, content);
+        } else if (type === 'table') {
+            let table = this.writeTable(data)
+            content.appendChild(table);
+        }
+        this.outputEl.appendChild(a);
+        a.querySelector('.delete-btn').addEventListener('click', event => this.delete(event, index));
+        a.querySelector('.save-btn').addEventListener('click', event => this.save(event, data));
+        a.querySelector('.toggle-btn').addEventListener('click', event => this.toggle(event, index));
+        this.newBlankLine();
+        this.scrollToBottom()
+    }
+
+    createJsonTree (jsonStr, content) {
         let data = JSON.parse(jsonStr);
-        let djt = new DomJsonTree(data, jsonDiv, {
+        let djt = new DomJsonTree(data, content, {
             colors: {
-                key: this.getCssVariable('--color'),    /* "#008080" */
-                type: this.getCssVariable('--color-cmd'), // "#546778",
+                key: this.getCssVariable('--color'),
+                type: this.getCssVariable('--color-cmd'),
                 typeNumber: "#000080",
                 typeString: this.getCssVariable('--color'),
                 typeBoolean: "#000080"
             }
         });
         djt.render();
-        this.outputEl.appendChild(a);
-        a.querySelector('.delete-btn').addEventListener('click', event => this.delete(event, index));
-        a.querySelector('.save-btn').addEventListener('click', event => this.save(event, jsonStr));
-        a.querySelector('.toggle-btn').addEventListener('click', event => this.toggle(event, index));
-        this.newBlankLine();
-        this.scrollToBottom()
     }
 
-    writeCommandsTable() {
+    writeTable (commands) {
         let rows = []
         for (const key in commands) {
             const command = commands[key];
             rows.push(`<tr><td><strong>${key}</strong></td><td>${command.info}</td></tr>`);
         }
-        let tableTemplate = `<table class="webcli-tbl">${rows.join()}</table>`;
-        this.writeHTML(tableTemplate, 'cmd');
+        let tableTemplate = `<table class="webcli-tbl">${rows.join('')}</table>`;
+        let div = document.createElement("div");
+        div.className = "webcli-cmd";
+        div.innerHTML = tableTemplate;
+        return div;
     }
 
-    delete(e, el) {
+    delete (e, el) {
         let element = this._shadow.querySelector(`.${el}`);
         element.parentNode.removeChild(element);
     }
 
     // si salva solo in formato JSON ???
-    save(e, jsonStr) {
+    save (e, jsonStr) {
         let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jsonStr));
         let dlAnchorElem = this._shadow.querySelector('#downloadAnchorElem');
         dlAnchorElem.setAttribute("href", dataStr);
@@ -253,30 +283,34 @@ class WebCLI extends HTMLElement {
         dlAnchorElem.click();
     }
 
-    toggle(e, el) {
+    toggle (e, el) {
         let element = this._shadow.querySelector(`.${el}`);
-        let jsonDiv = element.querySelector('.json-div');
-        if (jsonDiv.style.display === "none") {
-            jsonDiv.style.display = "block";
+        let contentDiv = element.querySelector('.content');
+        if (contentDiv.style.display === "none") {
+            contentDiv.style.display = "block";
         } else {
-            jsonDiv.style.display = "none";
+            contentDiv.style.display = "none";
         }
+    }
+    close (e, el) {
+        let contentDiv = el.querySelector('.content');
+        contentDiv.style.display = "none";
     }
 
 
     // non funziona !!!
-    getCssVariable(variableName) {
+    getCssVariable (variableName) {
         let color = getComputedStyle(this._shadow.host).getPropertyValue(variableName);
         return color;
     }
 
 
-    showWelcomeMsg() {
-        this.writeHTML("Use <strong>:help</strong> to show <strong>web-cli</strong> commands", "cmd");
+    showWelcomeMsg () {
+        this.writeHTML(`<h3>Welcome ${this._options.user}</h3><p>Use <strong>:help</strong> to show <strong>web-cli</strong> commands</p>`, "cmd");
         this.newBlankLine();
     }
 
-    createTemplate() {
+    createTemplate () {
         let template = document.createElement("template");
         template.innerHTML = `${CLI_STYLE}${CLI_TEMPLATE}`;
         this._shadow = this.attachShadow({ mode: "open" });
@@ -291,7 +325,7 @@ class WebCLI extends HTMLElement {
         this.ctrlEl.style.display = "none"; // the web-cli by default is invisible!
     }
 
-    loader(b) {
+    loader (b) {
         this.isloader = b;
         this.loaderEl.style.display = b ? "block" : "none";
     }
