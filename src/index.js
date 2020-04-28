@@ -3,6 +3,29 @@ import { commands } from './commands';
 
 import DomJsonTree from 'dom-json-tree';
 
+
+window.onload = function runApp() {
+    let web_cli = document.querySelector('web-cli');
+    web_cli.options = {
+        user: "Lorenzo",
+        size: 'lg',
+        theme: 'grey',
+        max_num_commands: 40,
+        open: true,
+        groups: {
+            dev: [
+                'https://alligator.io/',
+                'https://www.freecodecamp.org/news/tag/javascript/',
+                'https://www.echojs.com/'
+            ],
+            common: [
+                'https://jsoneditoronline.org/',
+                'https://mail.google.com/'
+            ]
+        }
+    };
+}
+
 function formatDate (date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),

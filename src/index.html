@@ -38,7 +38,7 @@
     </style>
 </head>
 
-<body onload="runApp()">
+<body>
 
     <h1 class="title">Open the WEB-CLI with <strong> CTRl + \ </strong></h1>
 
@@ -46,29 +46,6 @@
     <web-cli></web-cli>
 
     <script src="index.js"></script>
-    <script>
-        function runApp() {
-            let web_cli = document.querySelector('web-cli');
-            web_cli.options = {
-                user: "Lorenzo",
-                size: 'lg',
-                theme: 'grey',
-                max_num_commands: 40,
-                open: true,
-                groups: {
-                    dev: [
-                        'https://alligator.io/',
-                        'https://www.freecodecamp.org/news/tag/javascript/',
-                        'https://www.echojs.com/'
-                    ],
-                    common: [
-                        'https://jsoneditoronline.org/',
-                        'https://mail.google.com/'
-                    ]
-                }
-            };
-        }
-    </script>
 </body>
 
 </html>
