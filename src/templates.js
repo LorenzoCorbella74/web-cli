@@ -1,5 +1,5 @@
 export const CLI_TEMPLATE = `
-    <div class="webcli light-theme sm-size">
+<div class="webcli light-theme sm-size">
     <div class="webcli-output"></div>
     <div class="webcli-input">
         <div class="symbol"> > </div>
@@ -12,8 +12,7 @@ export const CLI_TEMPLATE = `
     </div>
     <!-- DOWNLOAD -->
     <a id="downloadAnchorElem" style="display:none"></a>
-    </div>`
-    ;
+</div>`;
 
 export const CLI_STYLE = `
 <style>
@@ -147,6 +146,7 @@ h1,h2,h3 {
     position: absolute;
     bottom: 14px;
     left: 0px;
+    right: 0px;
     padding: 0 14px;
     overflow: hidden;
     align-self: flex-end;
