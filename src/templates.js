@@ -3,7 +3,7 @@ export const CLI_TEMPLATE = `
     <div class="webcli-output"></div>
     <div class="webcli-input">
         <div class="symbol"> > </div>
-        <div> <input type="text"></div>
+        <input type="text">
         <div class="webcli-loader"></div>
     </div>
     <div class="copy">
