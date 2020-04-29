@@ -3,7 +3,6 @@ import { commands } from './commands';
 
 import DomJsonTree from 'dom-json-tree';
 
-
 window.onload = function runApp () {
     let web_cli = document.querySelector('web-cli');
     web_cli.options = {
@@ -25,6 +24,43 @@ window.onload = function runApp () {
         }
     };
 }
+
+// SOURCE: https://stackoverflow.com/questions/22180457/typewriter-effect-for-html-with-javascript
+function makeTyping (element, string, cb, time = 45) {
+
+    var str = string,
+        i = 0,
+        isTag,
+        text;
+
+    return function type () {
+        text = str.slice(0, ++i);
+        if (text === str) {
+            cb();
+            return;
+        }
+        element.innerHTML = text;
+        var char = text.slice(-1);
+        if (char === '<') isTag = true;
+        if (char === '>') isTag = false;
+
+        if (isTag) return type(cb);
+        setTimeout(type, time);
+    };
+}
+
+/* 
+
+const whenEnd = () => console.log('End!')
+
+var test = makeTyping(
+    document.getElementById('typewriter'),
+    "<p>This is my <span style='color:red;'>special string</span> </p>", 
+    whenEnd
+    );
+test(); 
+*/
+
 
 function formatDate (date) {
     var d = new Date(date),
@@ -117,17 +153,6 @@ class WebCLI extends HTMLElement {
         let match = classes.match(/\w+-size/g);
         this.ctrlEl.classList.remove(match);
         this.ctrlEl.classList.add(`${size}-size`);
-    }
-
-    toggleTheme (e) {
-        e.preventDefault();
-        if (this.ctrlEl.classList.contains('dark-theme')) {
-            this.ctrlEl.classList.remove('dark-theme');
-            localStorage.removeItem('dark-theme');
-        } else {
-            this.ctrlEl.classList.add('dark-theme');
-            localStorage.setItem('dark-theme', true);
-        }
     }
 
     toggleCli () {
@@ -229,30 +254,33 @@ class WebCLI extends HTMLElement {
     writeHTML (markup, cmdClass) {
         let div = document.createElement("div");
         cmdClass = cmdClass || "cmd";
-        div.className = "webcli-" + cmdClass;
-        div.innerHTML = markup;
+        let index = `output${Math.floor(Math.random() * 10000)}`;
+        div.className = `webcli-${cmdClass} ${index}`;
+        div.innerHTML = '';
         this.outputEl.appendChild(div);
-        this.scrollToBottom()
+        // let e = this.outputEl.querySelector(`.${index}`);
+        makeTyping(div, markup, this.scrollToBottom.bind(this),5)();
     }
 
     writeBlock (title, type, data) {
         let template = document.createElement("template");
         template.innerHTML = `${DELETABLE_DIV(title, type)}`;
-        let div = template.content.cloneNode(true);
-        let index = `Output${Math.floor(Math.random() * 10000)}`;
-        let a = div.children[0];
-        a.classList.add(index);
-        let content = div.querySelector('.content');
+        let container = template.content.cloneNode(true);
+        let index = `block${Math.floor(Math.random() * 10000)}`;
+        let block = container.children[0];
+        block.classList.add(index);
+        let content = container.querySelector('.content');
         if (type === 'json') {
             this.createJsonTree(data, content);
         } else if (type === 'table') {
             let table = this.writeTable(data)
             content.appendChild(table);
         }
-        this.outputEl.appendChild(a);
-        a.querySelector('.delete-btn').addEventListener('click', event => this.delete(event, index));
-        a.querySelector('.save-btn').addEventListener('click', event => this.save(event, data));
-        a.querySelector('.toggle-btn').addEventListener('click', event => this.toggle(event, index));
+        this.outputEl.appendChild(block);
+        // mantiene il riferimento all'elemento
+        block.querySelector('.delete-btn').addEventListener('click', event => this.delete(event, index));
+        block.querySelector('.save-btn').addEventListener('click', event => this.save(event, data));
+        block.querySelector('.toggle-btn').addEventListener('click', event => this.toggle(event, index));
         this.newBlankLine();
         this.scrollToBottom()
     }
@@ -345,5 +373,7 @@ class WebCLI extends HTMLElement {
         this.loaderEl.style.display = b ? "block" : "none";
     }
 }
+
+
 
 customElements.define("web-cli", WebCLI);
