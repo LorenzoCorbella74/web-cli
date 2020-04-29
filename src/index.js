@@ -4,7 +4,7 @@ import { commands } from './commands';
 import DomJsonTree from 'dom-json-tree';
 
 
-window.onload = function runApp() {
+window.onload = function runApp () {
     let web_cli = document.querySelector('web-cli');
     web_cli.options = {
         user: "Lorenzo",
@@ -109,22 +109,14 @@ class WebCLI extends HTMLElement {
         let classes = this.ctrlEl.classList.value;
         let match = classes.match(/\w+-theme/g);
         this.ctrlEl.classList.remove(match);
-        if (theme === 'default') {
-            this.ctrlEl.classList.add('default-theme');
-        } else {
-            this.ctrlEl.classList.add(`${theme}-theme`);
-        }
+        this.ctrlEl.classList.add(`${theme}-theme`);
     }
 
     setSize (size) {
         let classes = this.ctrlEl.classList.value;
         let match = classes.match(/\w+-size/g);
         this.ctrlEl.classList.remove(match);
-        if (size === 'default') {
-            this.ctrlEl.classList.add('default-size');
-        } else {
-            this.ctrlEl.classList.add(`${size}-size`);
-        }
+        this.ctrlEl.classList.add(`${size}-size`);
     }
 
     toggleTheme (e) {

@@ -1,5 +1,5 @@
 export const CLI_TEMPLATE = `
-    <div class="webcli default-theme default-size">
+    <div class="webcli light-theme sm-size">
     <div class="webcli-output"></div>
     <div class="webcli-input">
         <div class="symbol"> > </div>
@@ -34,17 +34,17 @@ web-cli {
     --color-cmd: rgb(66, 66, 66);
     --color-error: red;
     --color-warning: orange;
-    --color-ok: rgb(55, 255, 0);
+    --color-ok: #3D9970;
     --color-border: rgb(175, 175, 175);
 }
 
-.default-theme {
+.light-theme {
     --color: #3442e2;
     --background: rgba(255, 255, 255);
     --color-cmd: rgb(66, 66, 66);
     --color-error: red;
     --color-warning: orange;
-    --color-ok: rgb(55, 255, 0);
+    --color-ok: #3D9970;
     --color-border: rgb(175, 175, 175);
 }
 
@@ -55,7 +55,7 @@ web-cli {
     --color-error: red;
     --color-warning: orange;
     --color-ok: #0ff;
-    --color-border: #cecbcb;
+    --color-border: #888;
 }
 
 .grey-theme {
@@ -71,12 +71,18 @@ web-cli {
 .blue-theme {
     --color: #FFDC00;
     --background: #001f3f;
-    --color-cmd: #a0aabf;
+    --color-cmd: white;
     --color-error: #FF4136;
     --color-warning: #FF851B;
     --color-ok: #01FF70;
     --color-border: #0074D9;
 }
+
+h1,h2,h3 {
+    font-weight: 300;
+    margin: 0.4em 0;
+  }
+  h3 { font-size: 2.5em; }
 
 /* -----    SVG Icons - svgicons.sparkk.fr  ----- */
 .svg-icon {
@@ -121,7 +127,7 @@ web-cli {
     flex-direction: column;
 }
 
-.default-size{
+.sm-size{
     height: 300px;
 }
 .md-size{

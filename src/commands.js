@@ -37,26 +37,26 @@ export const commands = {
     theme: {
         action: (instance, parameters) => {
             let theme = parameters[1];
-            if (theme === 'default' || theme === 'dark' || theme === 'grey' || theme === 'blue') {
+            if (theme === 'light' || theme === 'dark' || theme === 'grey' || theme === 'blue') {
                 instance.setTheme(theme);
                 instance.writeHTML(`> :theme ${theme}`, "ok");
                 return;
             }
             instance.writeHTML(`> <strong>${theme}</strong> ${notRecognized}`, "error");
         },
-        info: 'Set the theme of the web-cli: dark|default'
+        info: 'Set the theme of the web-cli: dark|light|grey|blue'
     },
     size: {
         action: (instance, parameters) => {
             let size = parameters[1];
-            if (size === 'default' || size === 'md' || size === 'lg') {
+            if (size === 'sm' || size === 'md' || size === 'lg') {
                 instance.setSize(size);
                 instance.writeHTML(`> :size ${size}`, "ok");
                 return;
             }
             instance.writeHTML(`> <strong>${size}</strong> ${notRecognized}`, "error");
         },
-        info: 'Set the size of the web-cli: default|md|lg'
+        info: 'Set the size of the web-cli: sm|md|lg'
     },
     jf: {
         action: (instance, parameters) => {

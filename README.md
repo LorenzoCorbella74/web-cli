@@ -30,8 +30,8 @@ npm run build-prod
 
 # Commands
 - [x] :help -> Show a list of commands
-- [x] :theme __big/default__ -> change themes 
-- [x] :size __big/default__ -> change size of the console window
+- [x] :theme __light|grey|blue|dark__ -> change themes 
+- [x] :size __sm|md|lg__ -> change size of the console window
 - [x] :clean -> Clean the console window
 - [x] :wipe -> Clean the commands history
 - [x] :about -> Show console info
@@ -79,8 +79,8 @@ webCli.options = {
 | ------- | -------------- | ----------- | ------------ |
 | user | *string* | The user... | **"user"** |
 | open | *Boolean* | Open or closed | **"false"** |
-| size | **"default"**&#124;**"sm"**&#124;**"md"**&#124;**"lg"** | size of the terminal window |**"default"** |
-| theme | **"dark"**&#124;**"default"**&#124;**"grey"**&#124;**"blue"** | The theme | **"default"** |
+| size | **"sm"**&#124;**"md"**&#124;**"lg"** | size of the terminal window |**"default"** |
+| theme | **"dark"**&#124;**"light"**&#124;**"grey"**&#124;**"blue"** | The theme | **"light"** |
 | max_num_commands | *number* | Max commands in history | **"50"** |
 
 # Outputs

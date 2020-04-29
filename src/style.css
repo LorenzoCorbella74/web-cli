@@ -19,7 +19,7 @@ web-cli {
     --color-border: rgb(175, 175, 175);
 }
 
-.default-theme {
+.light-theme {
     --color: #3442e2;
     --background: rgba(255, 255, 255);
     --color-cmd: rgb(66, 66, 66);
@@ -36,10 +36,10 @@ web-cli {
     --color-error: red;
     --color-warning: orange;
     --color-ok: #0ff;
-    --color-border: #4A5261;
+    --color-border: #888;
 }
 
-.test-theme {
+.grey-theme {
     --color: #35D7BB;
     --background: #2b2f36;
     --color-cmd: #a0aabf;
@@ -52,10 +52,10 @@ web-cli {
 .blue-theme {
     --color: #FFDC00;
     --background: #001f3f;
-    --color-cmd: #a0aabf;
+    --color-cmd: white;
     --color-error: #FF4136;
     --color-warning: #FF851B;
-    --color-ok: #7FDBFF;
+    --color-ok: #01FF70;
     --color-border: #0074D9;
 }
 
