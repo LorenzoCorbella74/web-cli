@@ -3,13 +3,14 @@ import { commands } from './commands';
 
 import DomJsonTree from 'dom-json-tree';
 
-window.onload = function runApp () {
+window.onload = function runApp() {
     let web_cli = document.querySelector('web-cli');
     web_cli.options = {
         user: "Lorenzo",
         size: 'lg',
         theme: 'grey',
         max_num_commands: 40,
+        search_engine: 'google',
         open: true,
         groups: {
             dev: [
@@ -17,7 +18,7 @@ window.onload = function runApp () {
                 'https://www.freecodecamp.org/news/tag/javascript/',
                 'https://www.echojs.com/'
             ],
-            common: [
+            start: [
                 'https://jsoneditoronline.org/',
                 'https://mail.google.com/'
             ]
@@ -26,14 +27,14 @@ window.onload = function runApp () {
 }
 
 // SOURCE: https://stackoverflow.com/questions/22180457/typewriter-effect-for-html-with-javascript
-function makeTyping (element, string, cb, time = 45) {
+function makeTyping(element, string, cb, time = 45) {
 
     var str = string,
         i = 0,
         isTag,
         text;
 
-    return function type () {
+    return function type() {
         text = str.slice(0, ++i);
         if (text === str) {
             cb();
@@ -62,7 +63,7 @@ test();
 */
 
 
-function formatDate (date) {
+function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
@@ -91,7 +92,7 @@ class WebCLI extends HTMLElement {
     }
 
 
-    set options (input) {
+    set options(input) {
         this._options = input;
         if (input.theme) {
             this.setTheme(input.theme);
@@ -102,26 +103,28 @@ class WebCLI extends HTMLElement {
         if (input.open) {
             this.toggleCli();
         }
+        this.searchPath = input.search_engine === 'bing' ? 'https://www.bing.com/search?q=' : 'http://www.google.com/search?q=';
+
         this.showWelcomeMsg();
     }
 
-    get options () {
+    get options() {
         return this._options;
     }
 
-    connectedCallback () {
+    connectedCallback() {
         document.addEventListener('keydown', event => this.onKeyDown(event));
         this.ctrlEl.addEventListener('click', event => this.onClick(event));
         this.inputEl.addEventListener('paste', event => this.onPaste(event));
     }
 
-    disconnectedCallback () {
+    disconnectedCallback() {
         document.removeEventListener('keydown', event => this.onKeyDown(event));
         this.ctrlEl.removeEventListener('click', event => this.onClick(event));
         this.inputEl.removeEventListener('paste', event => this.onPaste(event));
     }
 
-    onPaste (event) {
+    onPaste(event) {
 
         let paste = (event.clipboardData || window.clipboardData).getData('text');
         paste = JSON.stringify(JSON.parse(paste)); // si rimuovono tutti gli spazi
@@ -137,25 +140,25 @@ class WebCLI extends HTMLElement {
         setTimeout(this.updateCursor.bind(this), 100);
     }
 
-    onClick () {
+    onClick() {
         this.focus();
     }
 
-    setTheme (theme) {
+    setTheme(theme) {
         let classes = this.ctrlEl.classList.value;
         let match = classes.match(/\w+-theme/g);
         this.ctrlEl.classList.remove(match);
         this.ctrlEl.classList.add(`${theme}-theme`);
     }
 
-    setSize (size) {
+    setSize(size) {
         let classes = this.ctrlEl.classList.value;
         let match = classes.match(/\w+-size/g);
         this.ctrlEl.classList.remove(match);
         this.ctrlEl.classList.add(`${size}-size`);
     }
 
-    toggleCli () {
+    toggleCli() {
         let ctrlStyle = this.ctrlEl.style;
         if (ctrlStyle.display == "none") {
             ctrlStyle.display = "";
@@ -165,7 +168,7 @@ class WebCLI extends HTMLElement {
         }
     }
 
-    onKeyDown (e) {
+    onKeyDown(e) {
         if (e.ctrlKey && e.keyCode == 220) {    // Ctrl + Backquote
             this.toggleCli();
             return;
@@ -196,11 +199,11 @@ class WebCLI extends HTMLElement {
         }
     }
 
-    updateCursor () {
+    updateCursor() {
         this.hiddenInput.innerHTML = this.inputEl.value.replace(' ', 'x');   // hack per far avanzare il cursore anche con spazi
     }
 
-    runCmd () {
+    runCmd() {
         let txt = this.inputEl.value.trim();
         if (txt === "") { return; }  // If empty, stop processing
         this.hiddenInput.innerHTML = '';
@@ -224,25 +227,25 @@ class WebCLI extends HTMLElement {
         // Server commands TODO:
     }
 
-    focus () {
+    focus() {
         this.inputEl.focus();
     }
 
-    scrollToBottom () {
+    scrollToBottom() {
         this.outputEl.scrollTop = this.outputEl.scrollHeight;
     }
 
-    newBlankLine () {
+    newBlankLine() {
         this.outputEl.appendChild(document.createElement("br"));
         this.scrollToBottom();
     }
 
-    newLine () {
+    newLine() {
         this.outputEl.appendChild(document.createElement("hr"));
         this.scrollToBottom();
     }
 
-    writeText (txt, cmdClass) {
+    writeText(txt, cmdClass) {
         let div = document.createElement("div");
         cmdClass = cmdClass || "ok";
         div.className = "webcli-" + cmdClass;
@@ -251,7 +254,7 @@ class WebCLI extends HTMLElement {
         this.scrollToBottom()
     }
 
-    writeHTML (markup, cmdClass) {
+    writeHTML(markup, cmdClass) {
         let div = document.createElement("div");
         cmdClass = cmdClass || "cmd";
         let index = `output${Math.floor(Math.random() * 10000)}`;
@@ -259,10 +262,10 @@ class WebCLI extends HTMLElement {
         div.innerHTML = '';
         this.outputEl.appendChild(div);
         // let e = this.outputEl.querySelector(`.${index}`);
-        makeTyping(div, markup, this.scrollToBottom.bind(this),5)();
+        makeTyping(div, markup, this.scrollToBottom.bind(this), 5)();
     }
 
-    writeBlock (title, type, data) {
+    writeBlock(title, type, data) {
         let template = document.createElement("template");
         template.innerHTML = `${DELETABLE_DIV(title, type)}`;
         let container = template.content.cloneNode(true);
@@ -285,7 +288,7 @@ class WebCLI extends HTMLElement {
         this.scrollToBottom()
     }
 
-    createJsonTree (jsonStr, content) {
+    createJsonTree(jsonStr, content) {
         let data = JSON.parse(jsonStr);
         let djt = new DomJsonTree(data, content, {
             colors: {
@@ -299,7 +302,7 @@ class WebCLI extends HTMLElement {
         djt.render();
     }
 
-    writeTable (commands) {
+    writeTable(commands) {
         let rows = []
         for (const key in commands) {
             const command = commands[key];
@@ -312,13 +315,13 @@ class WebCLI extends HTMLElement {
         return div;
     }
 
-    delete (e, el) {
+    delete(e, el) {
         let element = this._shadow.querySelector(`.${el}`);
         element.parentNode.removeChild(element);
     }
 
     // si salva solo in formato JSON ???
-    save (e, jsonStr) {
+    save(e, jsonStr) {
         let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jsonStr));
         let dlAnchorElem = this._shadow.querySelector('#downloadAnchorElem');
         dlAnchorElem.setAttribute("href", dataStr);
@@ -326,7 +329,7 @@ class WebCLI extends HTMLElement {
         dlAnchorElem.click();
     }
 
-    toggle (e, el) {
+    toggle(e, el) {
         let element = this._shadow.querySelector(`.${el}`);
         let contentDiv = element.querySelector('.content');
         if (contentDiv.style.display === "none") {
@@ -335,25 +338,24 @@ class WebCLI extends HTMLElement {
             contentDiv.style.display = "none";
         }
     }
-    close (e, el) {
+    close(e, el) {
         let contentDiv = el.querySelector('.content');
         contentDiv.style.display = "none";
     }
 
-
     // non funziona !!!
-    getCssVariable (variableName) {
+    getCssVariable(variableName) {
         let color = getComputedStyle(this._shadow.host).getPropertyValue(variableName);
         return color;
     }
 
 
-    showWelcomeMsg () {
-        this.writeHTML(`<h3>Welcome ${this._options.user}</h3><p>Use <strong>:help</strong> to show <strong>web-cli</strong> commands</p>`, "cmd");
+    showWelcomeMsg() {
+        this.writeHTML(`<h3>Welcome <span class="emphasised">${this._options.user}</span></h3><p>Use <strong>:help</strong> to show <strong>web-cli</strong> commands</p>`, "cmd");
         this.newBlankLine();
     }
 
-    createTemplate () {
+    createTemplate() {
         let template = document.createElement("template");
         template.innerHTML = `${CLI_STYLE}${CLI_TEMPLATE}`;
         this._shadow = this.attachShadow({ mode: "open" });
@@ -368,7 +370,7 @@ class WebCLI extends HTMLElement {
         this.ctrlEl.style.display = "none"; // the web-cli by default is invisible!
     }
 
-    loader (b) {
+    loader(b) {
         this.isloader = b;
         this.loaderEl.style.display = b ? "block" : "none";
     }

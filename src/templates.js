@@ -63,7 +63,7 @@ web-cli {
     --color-cmd: #a0aabf;
     --color-error: rgb(245, 99, 91);
     --color-warning: rgb(253, 190, 72);
-    --color-ok: #0ff;
+    --color-ok: #bb3571;
     --color-border: #4A5261;
 }
 
@@ -73,7 +73,7 @@ web-cli {
     --color-cmd: white;
     --color-error: #FF4136;
     --color-warning: #FF851B;
-    --color-ok: #01FF70;
+    --color-ok: #a14151;
     --color-border: #0074D9;
 }
 
@@ -82,6 +82,11 @@ h1,h2,h3 {
     margin: 0.4em 0;
   }
   h3 { font-size: 2.5em; }
+
+.emphasised{
+    color:var(--color);
+    font-size:inherit;
+}
 
 /* -----    SVG Icons - svgicons.sparkk.fr  ----- */
 .svg-icon {

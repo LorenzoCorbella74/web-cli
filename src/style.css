@@ -1,7 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@100;300;400;600;700&display=swap");
 /* @import url(require("style.css")); */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
@@ -59,33 +61,43 @@ web-cli {
     --color-border: #0074D9;
 }
 
-h1,h2,h3 {
+h1,
+h2,
+h3 {
     font-weight: 300;
     margin: 0.4em 0;
-  }
-  h3 { font-size: 2.5em; }
+}
+
+h3 {
+    font-size: 2.5em;
+}
+
+.emphasised {
+    color: var(--color);
+}
 
 /* -----    SVG Icons - svgicons.sparkk.fr  ----- */
 .svg-icon {
-  width: 1.5em;
-  height: 1.5em;
+    width: 1.5em;
+    height: 1.5em;
 }
 
 .svg-icon path,
 .svg-icon polygon,
 .svg-icon rect {
-  fill: var(--color);
+    fill: var(--color);
 }
 
 .svg-icon circle {
-  stroke: var(--color);
-  stroke-width: 1;
+    stroke: var(--color);
+    stroke-width: 1;
 }
 
 /* -----    scrollbar  ----- */
 ::-webkit-scrollbar {
     width: 6px;
 }
+
 ::-webkit-scrollbar-thumb {
     background: var(--color-border);
     border-radius: 6px;
@@ -108,13 +120,15 @@ h1,h2,h3 {
     flex-direction: column;
 }
 
-.sm-size{
+.sm-size {
     height: 300px;
 }
-.md-size{
+
+.md-size {
     height: 50%;
 }
-.lg-size{
+
+.lg-size {
     height: 100%;
 }
 
@@ -136,34 +150,42 @@ h1,h2,h3 {
     justify-content: space-between;
     align-items: center;
 }
+
 .webcli-input input {
-    flex:1;
+    flex: 1;
     background: transparent;
     border: none;
     overflow: hidden;
-    outline: none; /*Chrome*/
+    outline: none;
+    /*Chrome*/
     color: transparent;
     text-shadow: 0 0 0 var(--color);
     z-index: 2;
 }
+
 .webcli-input::-ms-clear {
     display: none;
-} /*Clear button in Edge*/
+}
+
+/*Clear button in Edge*/
 .webcli-input .symbol {
     color: var(--color);
     margin-right: 8px;
 }
+
 .copy {
     position: absolute;
     bottom: 14px;
     left: 31px;
     display: flex;
 }
+
 .before-cursor {
     color: transparent;
     border-right: 6px;
     z-index: 1;
 }
+
 .cursor {
     background: var(--color);
     z-index: 1;
@@ -175,16 +197,19 @@ h1,h2,h3 {
     color: var(--color-cmd);
     margin-bottom: 3px;
     margin-top: 3px;
-    padding:6px 0px;
+    padding: 6px 0px;
 }
+
 .webcli-error {
     color: var(--color-error);
     margin-bottom: 0.5rem;
 }
+
 .webcli-ok {
     color: var(--color-ok);
     margin-bottom: 0.5rem;
 }
+
 .webcli-warning {
     color: var(--color-ok);
     margin-bottom: 0.5rem;
@@ -194,15 +219,19 @@ h1,h2,h3 {
 .webcli-tbl {
     color: var(--color-cmd);
 }
+
 .webcli-tbl td {
     padding: 2px 5px;
 }
+
 .webcli-tbl td:first-child {
     padding-left: 0;
 }
+
 .webcli-lbl {
     color: #d3d7cf;
 }
+
 .webcli-val {
     color: #525753;
 }
@@ -218,55 +247,61 @@ h1,h2,h3 {
     animation: spin 0.6s linear infinite;
 }
 
-.deletable-div > .header {
-    display:flex;
-    justify-content:flex-end;
-    margin-bottom:0.5rem;
-    margin-top:0.5rem;
+.deletable-div>.header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
 }
 
 /* .deletable-divhover {
     border-top: 1px solid var(--color-border);
 } */
 
-.delete-btn, .save-btn, .toggle-btn {
-    opacity:0;
+.delete-btn,
+.save-btn,
+.toggle-btn {
+    opacity: 0;
     color: var(--color-border);
-    margin:0px 6px;
-    transition:opacity 250ms;
+    margin: 0px 6px;
+    transition: opacity 250ms;
 }
 
 .header .title {
-    flex-grow:1;
-    text-align:left;
+    flex-grow: 1;
+    text-align: left;
     overflow: none;
     text-overflow: ellipsis;
-    width:100%;
+    width: 100%;
     color: var(--color-cmd);
 }
 
-.header:hover > .delete-btn, .header:hover > .save-btn, .header:hover > .toggle-btn {
-    opacity:1;
-    cursor:pointer;
+.header:hover>.delete-btn,
+.header:hover>.save-btn,
+.header:hover>.toggle-btn {
+    opacity: 1;
+    cursor: pointer;
 }
 
-.content{
-    position:relative;
-    left:1rem;
-    width:90%;
+.content {
+    position: relative;
+    left: 1rem;
+    width: 90%;
 }
 
-hr{
-    color:--color-border;
+hr {
+    color: --color-border;
 }
 
 @keyframes blink {
     0% {
         background: var(--color);
     }
+
     50% {
         background: transparent;
     }
+
     100% {
         background: var(--color);
     }

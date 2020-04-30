@@ -32,15 +32,16 @@ npm run build-prod
 - [x] :help -> Show a list of commands
 - [x] :theme __light|grey|blue|dark__ -> change themes 
 - [x] :size __sm|md|lg__ -> change size of the console window
-- [x] :clean -> Clean the console window
+- [x] :cls -> Clean the console window
 - [x] :wipe -> Clean the commands history
 - [x] :about -> Show console info
 - [x] :open __URL__ -> Open an url in a new Browser tab
 - [x] :group  -> Open selected bookmarks
+- [x] :see  -> Make a query with configured search engine (google|bing)
 - [x] :get __URL__ -> Make a get request and show the json response
 - [x] :jf __jsonStr__ -> Format a json string
 - [x] :close  -> Close all blocks
-- [x] :query  -> Parse an URl's query string
+- [x] :query  -> Parse an URl's query strings
 - [ ] :jdiff __jsonStr__ -> Compare two json strings
 - [ ] :track  -> Timetracker plugin
 - [ ] :weaver -> Weaver plugin
@@ -61,13 +62,14 @@ webCli.options = {
     theme: 'dark',
     max_num_commands: 40,
     open: true,
+    search_engine:'google',
     groups: {
         dev: [
             'https://alligator.io/',
             'https://www.freecodecamp.org/news/tag/javascript/',
             'https://www.echojs.com/'
         ],
-        common: [
+        start: [
             'https://jsoneditoronline.org/',
             'https://mail.google.com/'
         ]
@@ -78,6 +80,7 @@ webCli.options = {
 | Options | Allowed values | Description | Defaut value |
 | ------- | -------------- | ----------- | ------------ |
 | user | *string* | The user... | **"user"** |
+| search_engine | **"google"**&#124;**"bing"** | Search engine... | **"google"** |
 | open | *Boolean* | Open or closed | **"false"** |
 | size | **"sm"**&#124;**"md"**&#124;**"lg"** | size of the terminal window |**"default"** |
 | theme | **"dark"**&#124;**"light"**&#124;**"grey"**&#124;**"blue"** | The theme | **"light"** |

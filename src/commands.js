@@ -26,7 +26,7 @@ export const commands = {
         action: (instance) => {
             instance.writeHTML(`> :about -> Version: <strong>${instance.version}</strong> - <strong>${instance.versionDate}</strong>`, "cmd");
         },
-        info: 'Web cli info'
+        info: 'Web-cli info'
     },
     wipe: {
         action: (instance) => {
@@ -105,6 +105,19 @@ export const commands = {
         },
         info: 'Open a provided url'
     },
+    see: {
+        action: (instance, parameters) => {
+            parameters.shift();
+            let query = parameters.join('+');
+            if (query) {
+                // https://moz.com/blog/the-ultimate-guide-to-the-google-search-parameters
+                window.open(`${instance.searchPath}${query}&oq=${query}&as_qdr=y`, '_blank');
+            } else {
+                instance.writeHTML(`> <strong>Query</strong> ${notRecognized}`, "error");
+            }
+        },
+        info: `Make a query with the configured search engine`
+    },
     group: {
         action: (instance, parameters) => {
             let group_name = parameters[1];
@@ -140,7 +153,7 @@ export const commands = {
 
 };
 
-function getUrlParams (search) {
+function getUrlParams(search) {
     let hashes = search.slice(search.indexOf('?') + 1).split('&')
     return hashes.reduce((params, hash) => {
         let [key, val] = hash.split('=')
