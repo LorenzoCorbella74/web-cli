@@ -1,4 +1,4 @@
-import { notRecognized } from './templates';
+import { NOT_RECOGNIZED_COMMAND, NOT_RECOGNIZED_PARAMETER } from './templates';
 
 export const commands = {
     help: {
@@ -11,7 +11,7 @@ export const commands = {
                     instance.writeHTML(`> <strong>:${command}</strong> - ${commands[command].info}`, "cmd");
                     return;
                 }
-                instance.writeHTML(`> <strong>${command}</strong> ${notRecognized}`, "error");
+                instance.writeHTML(`> <strong>${command}</strong> ${NOT_RECOGNIZED_COMMAND}`, "error");
             }
         },
         info: 'List of available commands'
@@ -42,7 +42,7 @@ export const commands = {
                 instance.writeHTML(`> :theme ${theme}`, "ok");
                 return;
             }
-            instance.writeHTML(`> <strong>${theme}</strong> ${notRecognized}`, "error");
+            instance.writeHTML(`> <strong>${theme}</strong> ${NOT_RECOGNIZED_PARAMETER}`, "error");
         },
         info: 'Set the theme of the web-cli: dark|light|grey|blue'
     },
@@ -54,7 +54,7 @@ export const commands = {
                 instance.writeHTML(`> :size ${size}`, "ok");
                 return;
             }
-            instance.writeHTML(`> <strong>${size}</strong> ${notRecognized}`, "error");
+            instance.writeHTML(`> <strong>${size}</strong> ${NOT_RECOGNIZED_PARAMETER}`, "error");
         },
         info: 'Set the size of the web-cli: sm|md|lg'
     },
@@ -86,6 +86,7 @@ export const commands = {
                     })
                     .catch(error => {
                         console.error(error);
+                        instance.writeHTML(`> Error getting data: ${error}`, "error");
                         instance.loader(false);
                     });
             } else {
@@ -100,7 +101,7 @@ export const commands = {
             if (url) {
                 window.open(url, '_blank');
             } else {
-                instance.writeHTML(`> <strong>${url}</strong> ${notRecognized}`, "error");
+                instance.writeHTML(`> <strong>URL</strong> ${NOT_RECOGNIZED_PARAMETER}`, "error");
             }
         },
         info: 'Open a provided url'
@@ -113,7 +114,7 @@ export const commands = {
                 // https://moz.com/blog/the-ultimate-guide-to-the-google-search-parameters
                 window.open(`${instance.searchPath}${query}&oq=${query}&as_qdr=y`, '_blank');
             } else {
-                instance.writeHTML(`> <strong>Query</strong> ${notRecognized}`, "error");
+                instance.writeHTML(`> <strong>Query</strong> ${NOT_RECOGNIZED_PARAMETER}`, "error");
             }
         },
         info: `Make a query with the configured search engine`
@@ -139,7 +140,7 @@ export const commands = {
                 let queryParams = getUrlParams(url);
                 instance.writeBlock(`> :query --url ${url}`, 'table', queryParams);
             } else {
-                instance.writeHTML(`> <strong>${url}</strong> ${notRecognized}`, "error");
+                instance.writeHTML(`> <strong>URL</strong> ${NOT_RECOGNIZED_PARAMETER}`, "error");
             }
         },
         info: 'Open a group of configured bookmarks'
@@ -149,6 +150,14 @@ export const commands = {
             instance.outputEl.querySelectorAll('.deletable-div').forEach(e => instance.close(null, e));
         },
         info: 'Close all blocks'
+    },
+    exit: {
+        action: (instance) => {
+            if (confirm("Close Web-cli?")) {
+                window.close();
+            }
+        },
+        info: 'Close the web-cli'
     }
 
 };

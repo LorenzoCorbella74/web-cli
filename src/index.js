@@ -37,6 +37,7 @@ function makeTyping(element, string, cb, time = 45) {
     return function type() {
         text = str.slice(0, ++i);
         if (text === str) {
+            element.innerHTML = text;
             cb();
             return;
         }
@@ -81,7 +82,7 @@ class WebCLI extends HTMLElement {
 
     constructor() {
         super();
-        this.history = [];      // Command history
+        this.history = [''];      // Command history
         this.cmdOffset = 0;     // Reverse offset into history
         this.version = '0.0.3';
         this.versionDate = '28/04/20'
@@ -272,11 +273,17 @@ class WebCLI extends HTMLElement {
         let index = `block${Math.floor(Math.random() * 10000)}`;
         let block = container.children[0];
         block.classList.add(index);
+        let titleDiv = block.querySelector('.header .title');
+        makeTyping(titleDiv, title, this.createContent.call(this, container, type, data, block, index), 0.5)();
+    }
+
+    createContent(container, type, data, block, index) {
         let content = container.querySelector('.content');
         if (type === 'json') {
             this.createJsonTree(data, content);
-        } else if (type === 'table') {
-            let table = this.writeTable(data)
+        }
+        else if (type === 'table') {
+            let table = this.writeTable2(data);
             content.appendChild(table);
         }
         this.outputEl.appendChild(block);
@@ -285,7 +292,7 @@ class WebCLI extends HTMLElement {
         block.querySelector('.save-btn').addEventListener('click', event => this.save(event, data));
         block.querySelector('.toggle-btn').addEventListener('click', event => this.toggle(event, index));
         this.newBlankLine();
-        this.scrollToBottom()
+        this.scrollToBottom();
     }
 
     createJsonTree(jsonStr, content) {
@@ -300,6 +307,21 @@ class WebCLI extends HTMLElement {
             }
         });
         djt.render();
+    }
+
+    writeTable2(commands) {
+        let div = document.createElement("div");
+        let index = `output${Math.floor(Math.random() * 10000)}`;
+        div.className = `webcli-cmd ${index}`;
+        div.innerHTML = '';
+        this.outputEl.appendChild(div);
+        let markup = ''
+        for (const key in commands) {
+            const command = commands[key];
+            markup += `<p><span class="list-table"><strong>:${key}</strong></span>${command.info}</p>`;
+        }
+        makeTyping(div, markup, this.scrollToBottom.bind(this), 0.5)();
+        return div;
     }
 
     writeTable(commands) {

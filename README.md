@@ -29,15 +29,16 @@ npm run build-prod
 ```
 
 # Commands
-- [x] :help -> Show a list of commands
+- [x] :help  -> Show a list of commands
+- [x] :about -> Show **web-cli** info
+- [x] :exit  -> Close the web-cli
 - [x] :theme __light|grey|blue|dark__ -> change themes 
-- [x] :size __sm|md|lg__ -> change size of the console window
-- [x] :cls -> Clean the console window
-- [x] :wipe -> Clean the commands history
-- [x] :about -> Show console info
+- [x] :size __sm|md|lg__ -> change size of the **web-cli** window
+- [x] :cls   -> Clean the **web-cli** window
+- [x] :wipe  -> Clean the commands history
 - [x] :open __URL__ -> Open an url in a new Browser tab
-- [x] :group  -> Open selected bookmarks
-- [x] :see  -> Make a query with configured search engine (google|bing)
+- [x] :group  -> Open selected bookmarks in new Browser tab
+- [x] :see   -> Make a query with configured search engine (google|bing)
 - [x] :get __URL__ -> Make a get request and show the json response
 - [x] :jf __jsonStr__ -> Format a json string
 - [x] :close  -> Close all blocks
@@ -45,9 +46,9 @@ npm run build-prod
 - [ ] :jdiff __jsonStr__ -> Compare two json strings
 - [ ] :track  -> Timetracker plugin
 - [ ] :weaver -> Weaver plugin
-- [ ] :todo  -> Todo plugin
-- [ ] :math  -> Math calculations
-- [ ] :var  -> Set variables
+- [ ] :todo   -> Todo plugin
+- [ ] :math   -> Math calculations
+- [ ] :var    -> Set environment variables
 - [ ] :cookie -> Get cookies
 - [ ] :storage -> Get localstorage
 

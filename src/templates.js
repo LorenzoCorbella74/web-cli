@@ -50,7 +50,7 @@ web-cli {
 .dark-theme {
     --color: #8ae234;
     --background: rgba(0, 0, 0, 0.95);
-    --color-cmd: #aaa;
+    --color-cmd: white;
     --color-error: red;
     --color-warning: orange;
     --color-ok: #0ff;
@@ -230,6 +230,11 @@ h1,h2,h3 {
     color: #525753;
 }
 
+.list-table{
+    min-width: 80px;
+    display: inline-block;
+}
+
 /*Busy animation    ----------------------------------------------------*/
 .webcli-loader {
     width: 14px;
@@ -303,7 +308,8 @@ hr{
 
 </style>`;
 
-export const notRecognized = 'is not recognized as command.';
+export const NOT_RECOGNIZED_COMMAND = 'is not recognized as command.';
+export const NOT_RECOGNIZED_PARAMETER = 'is not recognized as parameter.';
 
 export const DELETABLE_DIV = (title) => `
     <div class="deletable-div">
