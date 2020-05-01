@@ -169,7 +169,8 @@ export const commands = {
     },
     meteo: {
         action: (instance, parameters) => {
-            let city = parameters[1];
+            parameters.shift();
+            let city = parameters.join(' ');
             if (city) {
                 instance.loader(true);
                 let headers = new Headers({ 'Content-Type': 'application/json' }); // cors-anywhere.herokuapp.com/ https://api.openweathermap.org
@@ -192,7 +193,8 @@ export const commands = {
     },
     forecast: {
         action: (instance, parameters) => {
-            let city = parameters[1];
+            parameters.shift();
+            let city = parameters.join(' ');
             if (city) {
                 instance.loader(true);
                 let headers = new Headers({ 'Content-Type': 'application/json' });
