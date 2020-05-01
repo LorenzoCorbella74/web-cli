@@ -338,7 +338,7 @@ class WebCLI extends HTMLElement {
             <td><img class="icon" src="http://openweathermap.org/img/w/${forecast.weather[0].icon}.png" alt="Weather icon"></td>
                 </tr>`);
         }
-        let tableTemplate = `< table class="webcli-tbl" > ${rows.join('')}</table > `;
+        let tableTemplate = `<table class="webcli-tbl">${rows.join('')}</table>`;
         let div = document.createElement("div");
         div.className = "webcli-cmd";
         div.innerHTML = tableTemplate;
@@ -346,7 +346,7 @@ class WebCLI extends HTMLElement {
     }
 
     delete(e, el) {
-        let element = this._shadow.querySelector(`.${el} `);
+        let element = this._shadow.querySelector(`.${el}`);
         element.parentNode.removeChild(element);
     }
 
@@ -360,7 +360,7 @@ class WebCLI extends HTMLElement {
     }
 
     toggle(e, el) {
-        let element = this._shadow.querySelector(`.${el} `);
+        let element = this._shadow.querySelector(`.${el}`);
         let contentDiv = element.querySelector('.content');
         if (contentDiv.style.display === "none") {
             contentDiv.style.display = "block";
@@ -380,13 +380,13 @@ class WebCLI extends HTMLElement {
     }
 
     showWelcomeMsg() {
-        this.writeHTML(`<h3> Welcome <span class="emphasised" > ${this._options.user}</span ></h3><p>Use <strong>:help</strong> to show <strong>web-cli</strong> commands</p>`, "cmd");
+        this.writeHTML(`<h3>Welcome <span class="emphasised">${this._options.user}</span></h3><p>Use <strong>:help</strong> to show <strong>web-cli</strong> commands</p>`, "cmd");
         this.newBlankLine();
     }
 
     createTemplate() {
         let template = document.createElement("template");
-        template.innerHTML = `${CLI_STYLE} ${CLI_TEMPLATE} `;
+        template.innerHTML = `${CLI_STYLE}${CLI_TEMPLATE}`;
         this._shadow = this.attachShadow({ mode: "open" });
         this._shadow.appendChild(template.content.cloneNode(true));
 
