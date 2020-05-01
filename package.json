@@ -11,7 +11,7 @@
   "author": "Lorenzo Corbella",
   "license": "ISC",
   "scripts": {
-    "clean": "rimraf ./dist && rimraf -rf ./.cache",
+    "clean": "rimraf -rf ./.cache",
     "start": "npm run clean && parcel src/index.html --port 3000 --open",
     "build-prod": "parcel build src/index.html"
   },
