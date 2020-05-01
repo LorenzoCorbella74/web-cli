@@ -193,7 +193,7 @@ h1,h2,h3 {
     animation: blink 1s linear 0s infinite;
 }
 
-.icon{
+.icon img{
     width: 14px;
     height: 14px;
 }
