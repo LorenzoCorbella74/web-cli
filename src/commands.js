@@ -172,7 +172,7 @@ export const commands = {
                     .then(data => {
                         instance.loader(false);
                         console.log(data);
-                        instance.writeHTML((` <p> > :meteo  for ${city}: ${data.weather[0].description} - ${data.main[0].temp} - <img class="icon" src="http://openweathermap.org/img/w/${data.weather[0].icon}.png" alt="Weather icon"></p>`));
+                        instance.writeHTML((` <p> > :meteo  for ${city}: ${data.weather[0].description} - ${data.main.temp} - <img class="icon" src="http://openweathermap.org/img/w/${data.weather[0].icon}.png" alt="Weather icon"></p>`));
                     })
                     .catch(error => {
                         console.error(error);
