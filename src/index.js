@@ -127,19 +127,19 @@ class WebCLI extends HTMLElement {
     }
 
     onPaste(event) {
+        event.preventDefault();
 
         let paste = (event.clipboardData || window.clipboardData).getData('text');
         paste = JSON.stringify(JSON.parse(paste)); // si rimuovono tutti gli spazi
 
-        /* this.inputEl.value = this.inputEl.value + paste; */
+        this.inputEl.value = this.inputEl.value + paste;
 
-        /* const selection = this._shadow.querySelector('.webcli-input input');
+        const selection = this._shadow.querySelector('.webcli-input input');
         if (!selection.rangeCount) return false;
         selection.deleteFromDocument();
-        selection.getRangeAt(0).insertNode(document.createTextNode(paste)); */
+        selection.getRangeAt(0).insertNode(document.createTextNode(paste));
 
-        // event.preventDefault();
-        setTimeout(this.updateCursor.bind(this), 100);
+        setTimeout(this.updateCursor.bind(this), 80);
     }
 
     onClick() {
@@ -175,8 +175,6 @@ class WebCLI extends HTMLElement {
             this.toggleCli();
             return;
         }
-
-        // if (this.isloader) { return; }
 
         //Other keys (when input has focus)//http://keycode.info/
         if (this._shadow.host === document.activeElement) {
@@ -216,7 +214,6 @@ class WebCLI extends HTMLElement {
             this.history.push(txt);     // Add cmd to history
         }
 
-        // Client command:
         let tokens = /* txt.match(/\S+/g);  //  */txt.split(/\s+/);
         let cmd = tokens[0].toLowerCase().substring(1);
 
@@ -225,8 +222,6 @@ class WebCLI extends HTMLElement {
         } else {
             this.writeHTML(`> <strong>${tokens[0]}</strong> ${notRecognized}`, "error");
         }
-
-        // Server commands TODO:
     }
 
     focus() {
@@ -286,7 +281,7 @@ class WebCLI extends HTMLElement {
             let table = this.writeTable(data);
             content.appendChild(table);
         } else if (type === 'forecast') {
-            let table = /* this.writeMeteoForecast(data); */ this.writeTableForecast(data)
+            let table = this.writeTableForecast(data)
             content.appendChild(table);
         }
         this.outputEl.appendChild(block);
@@ -312,20 +307,6 @@ class WebCLI extends HTMLElement {
         djt.render();
     }
 
-    writeMeteoForecast(forecasts) {
-        let div = document.createElement("div");
-        let index = `forecast${Math.floor(Math.random() * 10000)}`;
-        div.className = `webcli-cmd ${index}`;
-        div.innerHTML = '';
-        this.outputEl.appendChild(div);
-        let markup = ''
-        for (let i = 0; i < forecasts.length; i++) {
-            const forecast = forecasts[i];
-            markup += `<p>${forecast.dt_txt.split(':')[0]}: ${forecast.weather[0].description} - ${forecast.main.temp} - <img class="icon" src="http://openweathermap.org/img/w/${forecast.weather[0].icon}.png" alt="Weather icon"><p/>`;
-        }
-        makeTyping(div, markup, this.scrollToBottom.bind(this), 0.5)();
-        return div;
-    }
     writeTable(commands) {
         let div = document.createElement("div");
         let index = `output${Math.floor(Math.random() * 10000)}`;
@@ -393,7 +374,6 @@ class WebCLI extends HTMLElement {
         let color = getComputedStyle(this._shadow.host).getPropertyValue(variableName);
         return color;
     }
-
 
     showWelcomeMsg() {
         this.writeHTML(`<h3>Welcome <span class="emphasised">${this._options.user}</span></h3><p>Use <strong>:help</strong> to show <strong>web-cli</strong> commands</p>`, "cmd");
