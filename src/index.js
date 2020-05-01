@@ -283,10 +283,10 @@ class WebCLI extends HTMLElement {
         if (type === 'json') {
             this.createJsonTree(data, content);
         } else if (type === 'table') {
-            let table = this.writeTable2(data);
+            let table = this.writeTable(data);
             content.appendChild(table);
         } else if (type === 'forecast') {
-            let table = this.writeMeteoForecast(data);
+            let table = /* this.writeMeteoForecast(data); */ this.writeTableForecast(data)
             content.appendChild(table);
         }
         this.outputEl.appendChild(block);
@@ -326,7 +326,7 @@ class WebCLI extends HTMLElement {
         makeTyping(div, markup, this.scrollToBottom.bind(this), 0.5)();
         return div;
     }
-    writeTable2(commands) {
+    writeTable(commands) {
         let div = document.createElement("div");
         let index = `output${Math.floor(Math.random() * 10000)}`;
         div.className = `webcli-cmd ${index}`;
@@ -341,11 +341,17 @@ class WebCLI extends HTMLElement {
         return div;
     }
 
-    writeTable(commands) {
+    writeTableForecast(forecasts) {
         let rows = []
-        for (const key in commands) {
-            const command = commands[key];
-            rows.push(`<tr><td><strong>${key}</strong></td><td>${command.info}</td></tr>`);
+        for (let i = 0; i < forecasts.length; i++) {
+            const forecast = forecasts[i];
+            rows.push(`<tr>
+                <td>${forecast.dt_txt.split(':')[0]}</td>
+                <td>${forecast.weather[0].main}</td>
+                <td>${forecast.weather[0].description}</td>
+                <td>${forecast.main.temp}</td>
+                <td><img class="icon" src="http://openweathermap.org/img/w/${forecast.weather[0].icon}.png" alt="Weather icon"></td>
+                </tr>`);
         }
         let tableTemplate = `<table class="webcli-tbl">${rows.join('')}</table>`;
         let div = document.createElement("div");
