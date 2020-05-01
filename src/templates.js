@@ -193,9 +193,9 @@ h1,h2,h3 {
     animation: blink 1s linear 0s infinite;
 }
 
-.icon img{
-    width: 14px;
-    height: 14px;
+.icon {
+    width: 24px;
+    height: 24px;
 }
 
 /* Output text   -----------------------------------------------------*/
