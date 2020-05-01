@@ -45,7 +45,7 @@ npm run build-prod
 - [x] :query  -> Parse an URl's query strings
 - [ ] :jdiff __jsonStr__ -> Compare two json strings
 - [ ] :track  -> Timetracker plugin
-- [ ] :weaver -> Weaver plugin
+- [x] :meteo -> Weaver plugin
 - [ ] :todo   -> Todo plugin
 - [ ] :math   -> Math calculations
 - [ ] :var    -> Set environment variables
@@ -64,6 +64,7 @@ webCli.options = {
     max_num_commands: 40,
     open: true,
     search_engine:'google',
+    nation:'it',    // for places with the same name on openWeavermap
     groups: {
         dev: [
             'https://alligator.io/',
@@ -86,6 +87,7 @@ webCli.options = {
 | size | **"sm"**&#124;**"md"**&#124;**"lg"** | size of the terminal window |**"default"** |
 | theme | **"dark"**&#124;**"light"**&#124;**"grey"**&#124;**"blue"** | The theme | **"light"** |
 | max_num_commands | *number* | Max commands in history | **"50"** |
+| nation | *string* | for places of the same name on [openWeathermap](https://openweathermap.org/api) | **"it"** |
 
 # Outputs
 The **web-cli** fires the following output events:

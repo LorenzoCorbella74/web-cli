@@ -1,5 +1,7 @@
 import { NOT_RECOGNIZED_COMMAND, NOT_RECOGNIZED_PARAMETER } from './templates';
 
+const OPENWEATHER_API_KEY = 'ac69f910a6ed9bc9205273eb8b0bc553';
+
 export const commands = {
     help: {
         action: (instance, parameters) => {
@@ -152,13 +154,60 @@ export const commands = {
         info: 'Close all blocks'
     },
     exit: {
-        action: (instance) => {
+        action: () => {
             if (confirm("Close Web-cli?")) {
                 window.close();
             }
         },
         info: 'Close the web-cli'
-    }
+    },
+    meteo: {
+        action: (instance, parameters) => {
+            let city = parameters[1];
+            if (city) {
+                instance.loader(true);
+                let headers = new Headers({ 'Content-Type': 'application/json' });
+                fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city},${instance.nation}&APPID=${OPENWEATHER_API_KEY}`, { headers })
+                    .then(response => response.json())
+                    .then(data => {
+                        instance.loader(false);
+                        console.log(data);
+                        instance.writeHTML((`> :meteo  for ${city}: ${instance.weather[0].main} - <div id="icon"><img src="http://openweathermap.org/img/w/${instance.weather[0].icon}.png" alt="Weather icon"></div>`));
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        instance.writeHTML(`> Error getting meteo for ${city}: ${error}`, "error");
+                        instance.loader(false);
+                    });
+            } else {
+                instance.writeHTML(`> <strong>City</strong> is missing!`, "error");
+            }
+        },
+        info: 'Weather forecasts for provided city'
+    },
+    forecast: {
+        action: (instance, parameters) => {
+            let city = parameters[1];
+            if (city) {
+                instance.loader(true);
+                let headers = new Headers({ 'Content-Type': 'application/json' });
+                fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city},${instance.nation}&APPID=${OPENWEATHER_API_KEY}`, { headers })
+                    .then(response => response.json())
+                    .then(data => {
+                        instance.loader(false);
+                        instance.writeBlock(`:meteo  ${city}, ${instance.nation.toUpperCase()}`, 'meteo', JSON.stringify(data));
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        instance.writeHTML(`> Error getting meteo for ${city}: ${error}`, "error");
+                        instance.loader(false);
+                    });
+            } else {
+                instance.writeHTML(`> <strong>City</strong> is missing!`, "error");
+            }
+        },
+        info: 'Weather forecasts for provided city'
+    },
 
 };
 

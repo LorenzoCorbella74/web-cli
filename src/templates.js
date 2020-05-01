@@ -193,6 +193,11 @@ h1,h2,h3 {
     animation: blink 1s linear 0s infinite;
 }
 
+.icon{
+    width: 14px;
+    height: 14px;
+}
+
 /* Output text   -----------------------------------------------------*/
 .webcli-cmd {
     color: var(--color-cmd);

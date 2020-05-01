@@ -12,6 +12,7 @@ window.onload = function runApp() {
         max_num_commands: 40,
         search_engine: 'google',
         open: true,
+        nation: 'it',
         groups: {
             dev: [
                 'https://alligator.io/',
@@ -105,7 +106,7 @@ class WebCLI extends HTMLElement {
             this.toggleCli();
         }
         this.searchPath = input.search_engine === 'bing' ? 'https://www.bing.com/search?q=' : 'http://www.google.com/search?q=';
-
+        this.nation = input.nation ? input.nation : 'it';
         this.showWelcomeMsg();
     }
 
