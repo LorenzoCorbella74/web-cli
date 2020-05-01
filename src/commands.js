@@ -6,7 +6,7 @@ export const commands = {
     help: {
         action: (instance, parameters) => {
             if (!parameters[1]) {
-                instance.writeBlock(`> :help -> list of commands`, 'table', commands)
+                instance.writeBlock(`> :help -> list of commands`, 'list_commands', commands)
             } else {
                 let command = parameters[1].substring(1);
                 if (command in commands) {
@@ -140,7 +140,7 @@ export const commands = {
             let url = parameters[1];
             if (url) {
                 let queryParams = getUrlParams(url);
-                instance.writeBlock(`> :query --url ${url}`, 'table', queryParams);
+                instance.writeBlock(`> :query --url ${url}`, 'list_query', queryParams);
             } else {
                 instance.writeHTML(`> <strong>URL</strong> ${NOT_RECOGNIZED_PARAMETER}`, "error");
             }

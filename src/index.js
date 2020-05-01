@@ -130,8 +130,9 @@ class WebCLI extends HTMLElement {
         event.preventDefault();
 
         let paste = (event.clipboardData || window.clipboardData).getData('text');
-        paste = JSON.stringify(JSON.parse(paste)); // si rimuovono tutti gli spazi
-
+        if (/:jf/g.test(this.inputEl.value)) {
+            paste = JSON.stringify(JSON.parse(paste)); // si rimuovono tutti gli spazi
+        }
         this.inputEl.value = this.inputEl.value + paste;
 
         const selection = this._shadow.querySelector('.webcli-input input');
@@ -277,7 +278,10 @@ class WebCLI extends HTMLElement {
         let content = container.querySelector('.content');
         if (type === 'json') {
             this.createJsonTree(data, content);
-        } else if (type === 'table') {
+        } else if (type === 'list_commands') {
+            let table = this.writeTable(data, true);
+            content.appendChild(table);
+        } else if (type === 'list_query') {
             let table = this.writeTable(data);
             content.appendChild(table);
         } else if (type === 'forecast') {
@@ -307,7 +311,7 @@ class WebCLI extends HTMLElement {
         djt.render();
     }
 
-    writeTable(commands) {
+    writeTable(commands, list) {
         let div = document.createElement("div");
         let index = `output${Math.floor(Math.random() * 10000)}`;
         div.className = `webcli-cmd ${index}`;
@@ -316,7 +320,7 @@ class WebCLI extends HTMLElement {
         let markup = ''
         for (const key in commands) {
             const command = commands[key];
-            markup += `<p><span class="list-table"><strong>:${key}</strong></span>${command.info}</p>`;
+            markup += `<p><span class="list-table"><strong>${list ? ':' : ''}${key}</strong ></span > ${command.info}</p > `;
         }
         makeTyping(div, markup, this.scrollToBottom.bind(this), 0.5)();
         return div;
@@ -326,15 +330,15 @@ class WebCLI extends HTMLElement {
         let rows = []
         for (let i = 0; i < forecasts.length; i++) {
             const forecast = forecasts[i];
-            rows.push(`<tr>
-                <td>${forecast.dt_txt.split(':')[0]}</td>
-                <td>${forecast.weather[0].main}</td>
-                <td>${forecast.weather[0].description}</td>
-                <td>${forecast.main.temp}</td>
-                <td><img class="icon" src="http://openweathermap.org/img/w/${forecast.weather[0].icon}.png" alt="Weather icon"></td>
+            rows.push(`< tr >
+            <td>${forecast.dt_txt.split(':')[0]}</td>
+            <td>${forecast.weather[0].main}</td>
+            <td>${forecast.weather[0].description}</td>
+            <td>${forecast.main.temp}</td>
+            <td><img class="icon" src="http://openweathermap.org/img/w/${forecast.weather[0].icon}.png" alt="Weather icon"></td>
                 </tr>`);
         }
-        let tableTemplate = `<table class="webcli-tbl">${rows.join('')}</table>`;
+        let tableTemplate = `< table class="webcli-tbl" > ${rows.join('')}</table > `;
         let div = document.createElement("div");
         div.className = "webcli-cmd";
         div.innerHTML = tableTemplate;
@@ -342,7 +346,7 @@ class WebCLI extends HTMLElement {
     }
 
     delete(e, el) {
-        let element = this._shadow.querySelector(`.${el}`);
+        let element = this._shadow.querySelector(`.${el} `);
         element.parentNode.removeChild(element);
     }
 
@@ -356,7 +360,7 @@ class WebCLI extends HTMLElement {
     }
 
     toggle(e, el) {
-        let element = this._shadow.querySelector(`.${el}`);
+        let element = this._shadow.querySelector(`.${el} `);
         let contentDiv = element.querySelector('.content');
         if (contentDiv.style.display === "none") {
             contentDiv.style.display = "block";
@@ -376,13 +380,13 @@ class WebCLI extends HTMLElement {
     }
 
     showWelcomeMsg() {
-        this.writeHTML(`<h3>Welcome <span class="emphasised">${this._options.user}</span></h3><p>Use <strong>:help</strong> to show <strong>web-cli</strong> commands</p>`, "cmd");
+        this.writeHTML(`<h3> Welcome <span class="emphasised" > ${this._options.user}</span ></h3><p>Use <strong>:help</strong> to show <strong>web-cli</strong> commands</p>`, "cmd");
         this.newBlankLine();
     }
 
     createTemplate() {
         let template = document.createElement("template");
-        template.innerHTML = `${CLI_STYLE}${CLI_TEMPLATE}`;
+        template.innerHTML = `${CLI_STYLE} ${CLI_TEMPLATE} `;
         this._shadow = this.attachShadow({ mode: "open" });
         this._shadow.appendChild(template.content.cloneNode(true));
 
