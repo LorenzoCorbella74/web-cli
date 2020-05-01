@@ -1,5 +1,5 @@
 [[redirects]]
-  from = "https://blissful-williams-cd0fdc.netlify.app/api.openweathermap.org/*"
+  from = "https://blissful-williams-cd0fdc.netlify.app/api/*"
   to = "https://api.openweathermap.org/:splat"
   status = 200
   force = true

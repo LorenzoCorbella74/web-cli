@@ -321,7 +321,7 @@ class WebCLI extends HTMLElement {
         let markup = ''
         for (let i = 0; i < forecasts.length; i++) {
             const forecast = forecasts[i];
-            markup += `<p>${formatDate(new Date(forecast.dt))}: ${forecast.weather[0].description} - <div id="icon"><img src="http://openweathermap.org/img/w/${instance.weather[0].icon}.png" alt="Weather icon"></div>`;
+            markup += `<p>${formatDate(new Date(forecast.dt))}: ${forecast.weather[0].description} - <span id="icon"><img src="http://openweathermap.org/img/w/${forecast.weather[0].icon}.png" alt="Weather icon"></span>`;
         }
         makeTyping(div, markup, this.scrollToBottom.bind(this), 0.5)();
         return div;
