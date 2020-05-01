@@ -85,8 +85,8 @@ class WebCLI extends HTMLElement {
         super();
         this.history = [''];      // Command history
         this.cmdOffset = 0;     // Reverse offset into history
-        this.version = '0.0.3';
-        this.versionDate = '28/04/20'
+        this.version = '0.1.5';
+        this.versionDate = '01/05/20'
 
         this.createTemplate();
 
@@ -282,9 +282,11 @@ class WebCLI extends HTMLElement {
         let content = container.querySelector('.content');
         if (type === 'json') {
             this.createJsonTree(data, content);
-        }
-        else if (type === 'table') {
+        } else if (type === 'table') {
             let table = this.writeTable2(data);
+            content.appendChild(table);
+        } else if (type === 'forecast') {
+            let table = this.writeMeteoForecast(data);
             content.appendChild(table);
         }
         this.outputEl.appendChild(block);
@@ -310,6 +312,20 @@ class WebCLI extends HTMLElement {
         djt.render();
     }
 
+    writeMeteoForecast(forecasts) {
+        let div = document.createElement("div");
+        let index = `forecast${Math.floor(Math.random() * 10000)}`;
+        div.className = `webcli-cmd ${index}`;
+        div.innerHTML = '';
+        this.outputEl.appendChild(div);
+        let markup = ''
+        for (let i = 0; i < forecasts.length; i++) {
+            const forecast = forecasts[i];
+            markup += `<p>${formatDate(new Date(forecast.dt))}: ${forecast.weather[0].description} - <div id="icon"><img src="http://openweathermap.org/img/w/${instance.weather[0].icon}.png" alt="Weather icon"></div>`;
+        }
+        makeTyping(div, markup, this.scrollToBottom.bind(this), 0.5)();
+        return div;
+    }
     writeTable2(commands) {
         let div = document.createElement("div");
         let index = `output${Math.floor(Math.random() * 10000)}`;

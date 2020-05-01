@@ -167,12 +167,12 @@ export const commands = {
             if (city) {
                 instance.loader(true);
                 let headers = new Headers({ 'Content-Type': 'application/json' });
-                fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city},${instance.nation}&APPID=${OPENWEATHER_API_KEY}`, { headers })
+                fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},${instance.nation}&APPID=${OPENWEATHER_API_KEY}`, { headers })
                     .then(response => response.json())
                     .then(data => {
                         instance.loader(false);
                         console.log(data);
-                        instance.writeHTML((`> :meteo  for ${city}: ${instance.weather[0].main} - <div id="icon"><img src="http://openweathermap.org/img/w/${instance.weather[0].icon}.png" alt="Weather icon"></div>`));
+                        instance.writeHTML((`> :meteo  for ${city}: ${instance.weather[0].description} - <div id="icon"><img src="http://openweathermap.org/img/w/${instance.weather[0].icon}.png" alt="Weather icon"></div>`));
                     })
                     .catch(error => {
                         console.error(error);
@@ -183,7 +183,7 @@ export const commands = {
                 instance.writeHTML(`> <strong>City</strong> is missing!`, "error");
             }
         },
-        info: 'Weather forecasts for provided city'
+        info: 'Current weather for the provided city'
     },
     forecast: {
         action: (instance, parameters) => {
@@ -191,11 +191,11 @@ export const commands = {
             if (city) {
                 instance.loader(true);
                 let headers = new Headers({ 'Content-Type': 'application/json' });
-                fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city},${instance.nation}&APPID=${OPENWEATHER_API_KEY}`, { headers })
+                fetch(`https://api.openweathermap.org/forecast/2.5/weather?q=${city},${instance.nation}&APPID=${OPENWEATHER_API_KEY}`, { headers })
                     .then(response => response.json())
                     .then(data => {
                         instance.loader(false);
-                        instance.writeBlock(`:meteo  ${city}, ${instance.nation.toUpperCase()}`, 'meteo', JSON.stringify(data));
+                        instance.writeBlock(`:meteo  ${city}, ${instance.nation.toUpperCase()}`, 'forecast', data.list);
                     })
                     .catch(error => {
                         console.error(error);
