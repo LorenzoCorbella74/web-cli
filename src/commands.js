@@ -167,12 +167,12 @@ export const commands = {
             if (city) {
                 instance.loader(true);
                 let headers = new Headers({ 'Content-Type': 'application/json' }); // cors-anywhere.herokuapp.com/ https://api.openweathermap.org
-                fetch(`/api/data/2.5/weather?q=${city},${instance.nation}&APPID=${OPENWEATHER_API_KEY}`, { headers })
+                fetch(`/api/data/2.5/weather?q=${city},${instance.nation}&APPID=${OPENWEATHER_API_KEY}&units=metric`, { headers })
                     .then(response => response.json())
                     .then(data => {
                         instance.loader(false);
                         console.log(data);
-                        instance.writeHTML((` <p> > :meteo  for ${city}: ${data.weather[0].description} - <img class="icon" src="http://openweathermap.org/img/w/${data.weather[0].icon}.png" alt="Weather icon"></p>`));
+                        instance.writeHTML((` <p> > :meteo  for ${city}: ${data.weather[0].description} - ${data.main[0].temp} - <img class="icon" src="http://openweathermap.org/img/w/${data.weather[0].icon}.png" alt="Weather icon"></p>`));
                     })
                     .catch(error => {
                         console.error(error);
@@ -191,7 +191,7 @@ export const commands = {
             if (city) {
                 instance.loader(true);
                 let headers = new Headers({ 'Content-Type': 'application/json' });
-                fetch(`/api/data/2.5/forecast?q=${city},${instance.nation}&APPID=${OPENWEATHER_API_KEY}`, { headers })
+                fetch(`/api/data/2.5/forecast?q=${city},${instance.nation}&APPID=${OPENWEATHER_API_KEY}&units=metric`, { headers })
                     .then(response => response.json())
                     .then(data => {
                         instance.loader(false);
