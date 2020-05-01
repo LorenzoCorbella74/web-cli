@@ -1,6 +1,6 @@
 {
   "name": "web-cli",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
   "keywords": [
@@ -16,7 +16,7 @@
     "build-prod": "parcel build src/index.html"
   },
   "dependencies": {
-    "dom-json-tree": "^1.0.7"
+    "json-formatter-js": "^2.3.4"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

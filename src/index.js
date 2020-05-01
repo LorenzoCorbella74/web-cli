@@ -1,7 +1,7 @@
-import { CLI_TEMPLATE, CLI_STYLE, notRecognized, DELETABLE_DIV } from './templates';
+import { CLI_TEMPLATE, CLI_STYLE, NOT_RECOGNIZED_COMMAND, DELETABLE_DIV } from './templates';
 import { commands } from './commands';
 
-import DomJsonTree from 'dom-json-tree';
+import JSONFormatter from 'json-formatter-js'
 
 window.onload = function runApp() {
     let web_cli = document.querySelector('web-cli');
@@ -85,14 +85,12 @@ class WebCLI extends HTMLElement {
         super();
         this.history = [''];      // Command history
         this.cmdOffset = 0;     // Reverse offset into history
-        this.version = '0.1.5';
+        this.version = '0.2.0';
         this.versionDate = '01/05/20'
 
         this.createTemplate();
-
         this.loader(false);
     }
-
 
     set options(input) {
         this._options = input;
@@ -214,14 +212,13 @@ class WebCLI extends HTMLElement {
         if (index === -1 && this.history.length <= (this._options.max_num_commands || 50)) {
             this.history.push(txt);     // Add cmd to history
         }
-
         let tokens = /* txt.match(/\S+/g);  //  */txt.split(/\s+/);
         let cmd = tokens[0].toLowerCase().substring(1);
 
         if (cmd in commands) {
             commands[cmd].action(this, tokens);
         } else {
-            this.writeHTML(`> <strong>${tokens[0]}</strong> ${notRecognized}`, "error");
+            this.writeHTML(`> <strong>${tokens[0]}</strong> ${NOT_RECOGNIZED_COMMAND}`, "error");
         }
     }
 
@@ -299,16 +296,13 @@ class WebCLI extends HTMLElement {
 
     createJsonTree(jsonStr, content) {
         let data = JSON.parse(jsonStr);
-        let djt = new DomJsonTree(data, content, {
-            colors: {
-                key: this.getCssVariable('--color'),
-                type: this.getCssVariable('--color-cmd'),
-                typeNumber: "#000080",
-                typeString: this.getCssVariable('--color'),
-                typeBoolean: "#000080"
-            }
+        const formatter = new JSONFormatter(data, 1, {
+            hoverPreviewEnabled: false,
+            hoverPreviewArrayCount: 10,
+            hoverPreviewFieldCount: 5,
+            theme: 'dark'
         });
-        djt.render();
+        content.appendChild(formatter.render());
     }
 
     writeTable(commands, list) {
@@ -404,7 +398,5 @@ class WebCLI extends HTMLElement {
         this.loaderEl.style.display = b ? "block" : "none";
     }
 }
-
-
 
 customElements.define("web-cli", WebCLI);
