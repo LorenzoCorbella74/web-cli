@@ -153,6 +153,12 @@ export const commands = {
         },
         info: 'Close all blocks'
     },
+    toggle: {
+        action: (instance) => {
+            instance.outputEl.querySelectorAll('.deletable-div').forEach(e => instance.close(null, e));
+        },
+        info: 'Toggle visibility for all blocks'
+    },
     exit: {
         action: () => {
             if (confirm("Close Web-cli?")) {
@@ -171,7 +177,7 @@ export const commands = {
                     .then(response => response.json())
                     .then(data => {
                         instance.loader(false);
-                        instance.writeHTML((`<p> > :meteo  for ${city},, ${instance.nation.toUpperCase()}:${data.weather[0].main} ${data.weather[0].description} - ${data.main.temp} - <img class="icon" src="http://openweathermap.org/img/w/${data.weather[0].icon}.png" alt="Weather icon"></p>`));
+                        instance.writeHTML((`<p> > :meteo  for ${city},${instance.nation.toUpperCase()}:${data.weather[0].main} - ${data.weather[0].description} - ${data.main.temp} <img class="icon" src="http://openweathermap.org/img/w/${data.weather[0].icon}.png" alt="Weather icon"></p>`));
                     })
                     .catch(error => {
                         console.error(error);
@@ -194,7 +200,7 @@ export const commands = {
                     .then(response => response.json())
                     .then(data => {
                         instance.loader(false);
-                        instance.writeBlock(`> :meteo forecasts for ${city}, ${instance.nation.toUpperCase()}`, 'forecast', data.list);
+                        instance.writeBlock(`> :meteo forecasts for ${city},${instance.nation.toUpperCase()}`, 'forecast', data.list);
                     })
                     .catch(error => {
                         console.error(error);
@@ -205,7 +211,7 @@ export const commands = {
                 instance.writeHTML(`> <strong>City</strong> is missing!`, "error");
             }
         },
-        info: 'Weather forecasts for provided city'
+        info: 'Weather forecasts for the provided city'
     },
 
 };

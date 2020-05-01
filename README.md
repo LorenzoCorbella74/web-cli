@@ -42,6 +42,7 @@ npm run build-prod
 - [x] :get __URL__ -> Make a get request and show the json response
 - [x] :jf __jsonStr__ -> Format a json string
 - [x] :close  -> Close all blocks
+- [x] :toggle  -> Toggle all blocks' visibility
 - [x] :query  -> Parse an URl's query strings
 - [ ] :jdiff __jsonStr__ -> Compare two json strings
 - [ ] :track  -> Timetracker plugin

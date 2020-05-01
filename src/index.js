@@ -324,13 +324,13 @@ class WebCLI extends HTMLElement {
         let rows = []
         for (let i = 0; i < forecasts.length; i++) {
             const forecast = forecasts[i];
-            rows.push(`< tr >
+            rows.push(`<tr>
             <td>${forecast.dt_txt.split(':')[0]}</td>
             <td>${forecast.weather[0].main}</td>
             <td>${forecast.weather[0].description}</td>
             <td>${forecast.main.temp}</td>
             <td><img class="icon" src="http://openweathermap.org/img/w/${forecast.weather[0].icon}.png" alt="Weather icon"></td>
-                </tr>`);
+            </tr>`);
         }
         let tableTemplate = `<table class="webcli-tbl">${rows.join('')}</table>`;
         let div = document.createElement("div");
@@ -364,7 +364,11 @@ class WebCLI extends HTMLElement {
     }
     close(e, el) {
         let contentDiv = el.querySelector('.content');
-        contentDiv.style.display = "none";
+        if (contentDiv.style.display === "none") {
+            contentDiv.style.display = "block";
+        } else {
+            contentDiv.style.display = "none";
+        }
     }
 
     // non funziona !!!
