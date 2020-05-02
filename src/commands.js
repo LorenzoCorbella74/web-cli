@@ -215,6 +215,13 @@ export const commands = {
         },
         info: 'Weather forecasts for the provided city'
     },
+    step: {
+        action: (instance, info) => {
+            console.log(JSON.stringify(instance), info);
+        },
+        steps: ['step1', 'step2', 'step3'],
+        info: 'Test multistep'
+    }
 
 };
 

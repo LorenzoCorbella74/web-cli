@@ -83,8 +83,11 @@ class WebCLI extends HTMLElement {
 
     constructor() {
         super();
-        this.history = [''];      // Command history
+
+        this.history = [];      // Command history
+        this.list = [];         // list of commands to be saved
         this.cmdOffset = 0;     // Reverse offset into history
+        this.currentStep = 0;   // step comandi multistep
         this.version = '0.2.0';
         this.versionDate = '01/05/20'
 
@@ -208,15 +211,51 @@ class WebCLI extends HTMLElement {
         this.hiddenInput.innerHTML = '';
         this.inputEl.value = '';     // Clear input
         this.cmdOffset = 0;         // Reset history index
+
+        if (this.currentCommand && this.currentStep === this.currentCommand.steps.length) {  // se all'ultimo step
+            let theOne = this.list.find(e => e.date === this.currentId);
+            theOne.input.push(txt);
+            this.currentStep = 0;
+            this.currentId = null;
+            this.currentCommand.action(this, theOne);
+            this.setPrompt('');
+            return
+        }
+
+        if (this.currentStep > 0) { // se siamo in un caso multi step
+            let theOne = this.list.find(e => e.date === this.currentId);
+            theOne.input.push(txt);
+            this.setPrompt(this.currentCommand.steps[this.currentStep])
+            this.currentStep++;
+            return;
+        }
+
+        // add commands to history if not present
         let index = this.history.findIndex(e => e === txt);
         if (index === -1 && this.history.length <= (this._options.max_num_commands || 50)) {
-            this.history.push(txt);     // Add cmd to history
+            this.history.push(txt);     // Add cmd to list
         }
+
+        // Add cmd to list
+        this.currentId = new Date().getTime();
+        this.list.push({
+            date: this.currentId,
+            input: [txt],
+            output: null
+        });
+
         let tokens = /* txt.match(/\S+/g);  //  */txt.split(/\s+/);
         let cmd = tokens[0].toLowerCase().substring(1);
 
         if (cmd in commands) {
-            commands[cmd].action(this, tokens);
+            let command = commands[cmd];
+            if (command.steps && this.currentStep < command.steps.length) {
+                this.setPrompt(command.steps[this.currentStep])
+                this.currentStep++;
+                this.currentCommand = command;
+            } else {
+                command.action(this, tokens);
+            }
         } else {
             this.writeHTML(`> <strong>${tokens[0]}</strong> ${NOT_RECOGNIZED_COMMAND}`, "error");
         }
@@ -382,6 +421,12 @@ class WebCLI extends HTMLElement {
         this.newBlankLine();
     }
 
+    setPrompt(txt) {
+        this.beforePrompts.forEach(element => {
+            element.innerText = txt;
+        });
+    }
+
     createTemplate() {
         let template = document.createElement("template");
         template.innerHTML = `${CLI_STYLE}${CLI_TEMPLATE}`;
@@ -393,6 +438,7 @@ class WebCLI extends HTMLElement {
         this.inputEl = this._shadow.querySelector(".webcli-input input"); // Input control
         this.loaderEl = this._shadow.querySelector(".webcli-loader");     // loader animation
         this.hiddenInput = this._shadow.querySelector(".before-cursor"); // loader animation
+        this.beforePrompts = this._shadow.querySelectorAll(".before-prompt"); // loader animation
 
         this.ctrlEl.style.display = "none"; // the web-cli by default is invisible!
     }

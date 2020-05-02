@@ -2,11 +2,13 @@ export const CLI_TEMPLATE = `
 <div class="webcli light-theme sm-size">
     <div class="webcli-output"></div>
     <div class="webcli-input">
+        <div class="before-prompt"></div>
         <div class="symbol"> > </div>
         <input type="text">
         <div class="webcli-loader"></div>
     </div>
     <div class="copy">
+        <span class="before-prompt" style="color:transparent;"></span>
         <span class="before-cursor"></span>
         <span class="cursor">&nbsp</span>
     </div>
@@ -193,6 +195,10 @@ h1,h2,h3 {
     background: var(--color);
     z-index: 1;
     animation: blink 1s linear 0s infinite;
+}
+.before-prompt{
+  color: var(--color);
+  margin-right:.5rem;
 }
 
 .icon {
