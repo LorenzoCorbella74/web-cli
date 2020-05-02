@@ -7,30 +7,24 @@
 
 My first attemp with __Web Components__ for creating a web development terminal like the console in FPS games (Quake, Unreal, etc....). 
 
-Check the online demo [here](https://blissful-williams-cd0fdc.netlify.app/) by opening the __web-cli__ with   `ctrl + \`.
+Check the online demo [here](https://blissful-williams-cd0fdc.netlify.app/). To toggle the __web-cli__ use   `ctrl + \`.
 
 ## Usage
-First install dependencies:
 
 ```sh
+# First install dependencies:
 npm install
-```
 
-To run a development server in hot module reloading mode:
-
-```sh
+# To run a development server in hot module reloading mode:
 npm start
-```
 
-To create a production build:
-
-```sh
+# To create a production build:
 npm run build-prod
 ```
 
 # Commands
-- [x] :help  -> Show a list of commands
-- [x] :about -> Show **web-cli** info
+- [x] :help  -> Show the list of commands
+- [x] :about -> Show **web-cli** version and version date
 - [x] :exit  -> Close the web-cli
 - [x] :theme __light|grey|blue|dark__ -> change themes 
 - [x] :size __sm|md|lg__ -> change size of the **web-cli** window
@@ -46,7 +40,7 @@ npm run build-prod
 - [x] :query  -> Parse an URl's query strings
 - [ ] :jdiff __jsonStr__ -> Compare two json strings
 - [ ] :track  -> Timetracker plugin
-- [x] :meteo -> Weaver plugin
+- [x] :meteo -> Weaver plugin based on the open
 - [ ] :todo   -> Todo plugin
 - [ ] :math   -> Math calculations
 - [ ] :var    -> Set environment variables
@@ -95,6 +89,6 @@ The **web-cli** fires the following output events:
 - [ ] TODO
 
 ## Built With
-HTML5, CSS, Javascript, [Web Components](https://developer.mozilla.org/it/docs/Web/Web_Components)
+HTML5, CSS, Javascript, [Web Components](https://developer.mozilla.org/it/docs/Web/Web_Components), [json-formatter-js](https://github.com/mohsen1/json-formatter-js)
 
 
