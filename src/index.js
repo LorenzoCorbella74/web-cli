@@ -266,7 +266,8 @@ class WebCLI extends HTMLElement {
     }
 
     scrollToBottom() {
-        this.outputEl.scrollTop = this.outputEl.scrollHeight;
+        // this.outputEl.scrollTop = this.outputEl.scrollHeight;
+        this.outputEl.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end'});
     }
 
     newBlankLine() {
