@@ -7,7 +7,7 @@
 
 My first attemp with __Web Components__ for creating a web development terminal like the console in FPS games (Quake, Unreal, etc....). 
 
-Check the online demo [here](https://blissful-williams-cd0fdc.netlify.app/). To toggle the __web-cli__ use   `ctrl + \`.
+Check the online demo [here](https://webcli-2020.netlify.app/). To toggle the __web-cli__ use   `ctrl + \`.
 
 ## Usage
 
